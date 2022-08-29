@@ -22,23 +22,27 @@ function getItem(label, key, icon, children, type) {
 
 const Nav = (props) => {
 
-    
-    const [newItem1,setNewitem1] = useState([]) //保存店铺消息提醒的数组
-    
+    /* 保存店铺消息提醒的数组 */
+    const [newItem1,setNewitem1] = useState([]) 
+
+    /* 模拟请求的数据 */
     const num = [
         { id: 2, name: '1 号店' },
         { id: 3, name: '2 号店' },
         { id: 4, name: '3 号店' },
-    ] //模拟请求的数据
+    ] 
  
     useEffect(() => {
 
-        let newItem=[] //一个用于中转的数组
+        /* 一个用于中转的数组 */
+        let newItem=[] 
         for(let item of num ){
            
-            newItem.push(getItem(<NavLink to={'/home/shop/' + item.id}>{item.name}</NavLink>, item.id)) //给newItem[] 添加新对象
+            /* 给newItem[] 添加新对象 */
+            newItem.push(getItem(<NavLink to={'/home/shop/' + item.id}>{item.name}</NavLink>, item.id)) 
             
-            setNewitem1(newItem) // 将更新过的 newItem[] 数组赋给newItem1
+            /* 将更新过的 newItem[] 数组赋给newItem1*/
+            setNewitem1(newItem) 
         }
     },[])
 
