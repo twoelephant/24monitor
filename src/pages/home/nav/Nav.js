@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import 'antd/dist/antd.min.css';
 import './Nav.scss'
 import { NavLink } from 'react-router-dom';
+
 function getItem(label, key, icon, children, type) {
   
     return {
@@ -20,6 +21,7 @@ function getItem(label, key, icon, children, type) {
 }
 
 const Nav = (props) => {
+
     
     const [newItem1,setNewitem1] = useState([])
     const num = [

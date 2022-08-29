@@ -1,11 +1,10 @@
 import { Col, Row, Button, Pagination, Table, } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-// import '../mock'
 import './index.scss'
 import "../../../mock/index"
 import { NavLink } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom'
 function View() {
     let [st, setSt] = useState(1)
     let [storeData, setStoreData] = useState('')
@@ -13,7 +12,8 @@ function View() {
     let [newcol, setNewcol] = useState([])
     let [page, setPage] = useState('1')
     let [text, setText] = useState('')
-    let [total,setTotal]=useState('')
+    let [total, setTotal] = useState('')
+    const navigate = useNavigate()
     const lsChange = () => {
         if (st === 1) {
             setSt(2)
@@ -31,7 +31,7 @@ function View() {
             key: 'storeName',
             render(text) {
 
-                return <NavLink  to='/home/shop/1'>{text}</NavLink>
+                return <NavLink to='/home/shop/1'>{text}</NavLink>
             }
         },
         {
@@ -90,12 +90,9 @@ function View() {
                     const cols = [];
                     for (let i = 0; i < res.data.data.length; i++) {
                         cols.push(
-                            <Col key={i} span={24 / 3} >
-                                <NavLink to={'/home/shop/1'}>
-                                    <div className='mointor' >{res.data.data[i].storeName}</div>
-                                    <div className='text'>{res.data.data[i].storeStatus}</div>
-                                </NavLink>
-
+                            <Col key={i} span={24 / 3} onClick={() => { navigate('/home/shop/1') }}>
+                                <div className='mointor' >{res.data.data[i].storeName}</div>
+                                <div className='text'>{res.data.data[i].storeStatus}</div>
                             </Col>,
                         );
                     }
@@ -103,10 +100,6 @@ function View() {
                 }
             })
             .catch((err) => { console.log(err) })
-
-
-
-
     }, [st, page])
     return (
         <div style={{ height: '100%' }}>
