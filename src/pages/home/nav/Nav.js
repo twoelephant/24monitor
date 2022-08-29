@@ -43,6 +43,7 @@ const Nav = (props) => {
     },[])
 
     const [collapsed,] = useState(false);
+ 
     return (
         <>
             <div className='nav'>
