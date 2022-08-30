@@ -18,8 +18,6 @@ for (let i = 0; i < 2; i++) {
         phone: '1785524958',
         mointorStatus: '未连接',
     })
-
-
 }
 
 /*定义一个view组件，渲染店铺信息，有列表、视图 两种模式*/
@@ -129,7 +127,7 @@ function View() {
                     videos.push('dp' + i)
                     videos[i] = new DPlayer({
                         container: document.getElementById('dplayer' + i),
-                        volume: 0.0,
+                        volume: 0.4,
                         mutex: false,
                         screenshot: true,
                         autoplay: true,
@@ -159,7 +157,7 @@ function View() {
 
                     <Button onClick={lsChange}>{changeText}</Button>
                     <div className='page'><Pagination defaultCurrent={page} onChange={(page) => { setPage(page) }} defaultPageSize={pageSize}
-                        showTitle={false} showSizeChanger={paget} total={total} /></div>
+                        showTitle={false} showTotal={(total)=>`共${total}家店铺`} showSizeChanger={paget} pageSizeOptions={[12,20,50]} total={total} /></div>
                 </div>
             </div>
         </div>
