@@ -30,12 +30,26 @@ const Nav = (props) => {
         { id: 2, name: '1 号店' },
         { id: 3, name: '2 号店' },
         { id: 4, name: '3 号店' },
+        { id: 5, name: '1 号店' },
+        { id: 6, name: '2 号店' },
+        { id: 7, name: '3 号店' },
+        { id: 8, name: '1 号店' },
+        { id: 9, name: '2 号店' },
+        { id: 10, name: '3 号店' },
+        { id: 11, name: '1 号店' },
+        { id: 14, name: '2 号店' },
+        { id: 15, name: '3 号店' },
+        { id: 16, name: '3 号店' },
+        { id: 17, name: '1 号店' },
+        { id: 18, name: '2 号店' },
+        { id: 19, name: '3 号店' },
     ] 
  
     useEffect(() => {
 
         /* 一个用于中转的数组 */
         let newItem=[] 
+
         for(let item of num ){
            
             /* 给newItem[] 添加新对象 */
@@ -62,10 +76,7 @@ const Nav = (props) => {
                         getItem(<NavLink to='/home'>监控</NavLink>, '1', <EyeOutlined />),
                         getItem('消息通知', 'sub1', <BellOutlined />, newItem1),
                     ]}
-
                 />
-
-
             </div>
 
         </>
