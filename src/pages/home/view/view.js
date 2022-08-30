@@ -9,7 +9,7 @@ import  Hls from 'hls.js'
 
 /*模拟数据*/
 const dataArry = []
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < 2; i++) {
     dataArry.push({
         key: i,
         storeName: '商铺' + i,
