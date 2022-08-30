@@ -126,7 +126,6 @@ function View() {
                     </Col>,
                 );
                 setTimeout(() => {
-
                     videos.push('dp' + i)
                     videos[i] = new DPlayer({
                         container: document.getElementById('dplayer' + i),
