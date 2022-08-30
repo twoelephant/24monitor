@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Login/>}></Route>
         <Route path="home/*" element={<Home/>}>
           <Route index element={<Monitor/>}></Route>
-          <Route path="shop/:shopId" element={<Shop/>}></Route>
+          <Route path="shop" element={<Shop/>}></Route>
           {/* <Route path="user2" element={<User2/>}></Route> */}
 
         </Route>
