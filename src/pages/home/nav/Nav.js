@@ -53,7 +53,7 @@ const Nav = (props) => {
         for(let item of num ){
            
             /* 给newItem[] 添加新对象 */
-            newItem.push(getItem(<NavLink to={'/home/shop/' + item.id}>{item.name}</NavLink>, item.id)) 
+            newItem.push(getItem(<NavLink to={'/home/shop'}>{item.name}</NavLink>, item.id)) 
             
             /* 将更新过的 newItem[] 数组赋给newItem1*/
             setNewitem1(newItem) 
