@@ -1,11 +1,12 @@
 import { Col, Row, Button, Pagination, Table, Input } from 'antd';
-import axios from 'axios';
+// import axios from 'axios';
 import { useState, useEffect } from 'react';
 import './index.scss'
-
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
 import DPlayer from 'dplayer';
+import  Hls from 'hls.js'
+
 /*模拟数据*/
 const dataArry = []
 for (let i = 0; i < 12; i++) {
@@ -23,6 +24,7 @@ for (let i = 0; i < 12; i++) {
 
 /*定义一个view组件，渲染店铺信息，有列表、视图 两种模式*/
 function View() {
+    window.Hls=Hls
     /*定义相关数据*/
     let [st, setSt] = useState(1)
     let [storeData, setStoreData] = useState('')
@@ -124,18 +126,21 @@ function View() {
                     </Col>,
                 );
                 setTimeout(() => {
-
                     videos.push('dp' + i)
                     videos[i] = new DPlayer({
                         container: document.getElementById('dplayer' + i),
+                        volume:0.0,
+                        mutex:false,
                         screenshot: true,
+                        autoplay: true,
+                        live: true,
                         video: {
-                            url: 'https://dplayer.diygod.dev',
-
+                            url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
+                            type:'hls'
                         },
                     });
 
-                }, 60);
+                }, 10);
             }
             setNewcol(cols)
 
@@ -143,7 +148,7 @@ function View() {
         }
 
 
-    }, [st, page])
+    }, [st, page,navigate])
     return (
         /*使用antd的格式，进行列表和视图的两种不同显示情况，使用按钮控制两种状态，分页器和搜索功能进行数据的改变*/
         <div style={{ height: '100%' }}>

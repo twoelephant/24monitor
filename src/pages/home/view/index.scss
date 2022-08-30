@@ -47,9 +47,9 @@ div {
         overflow: auto;
         .ant-row {
             height:600px;
-            border: 1px solid red;
+            
             .ant-col {
-                border: 1px solid red;
+                
                 padding: 1%;
                 height: 33.3%;
                 text-align: center;
@@ -59,7 +59,7 @@ div {
                     height: 90%;
                     padding: 0;
 
-                    .dplayer-video-wrap .dplayer-video {
+                    .dplayer-video-wrap  {
                         width: auto;
                         margin: 0;
                     }
@@ -68,6 +68,7 @@ div {
                 .text {
                     height: 10%;
                     font-size: 15px;
+                    margin-top: 9px;
                 }
             }
         }
@@ -84,13 +85,7 @@ div {
                     .green {
                         color: green;
                     }
-    
                 }
-
-               
-
-
-
             }
 
         }
