@@ -1,6 +1,7 @@
 @import '~antd/dist/antd.css';
 
 div {
+    
     .view-search {
         background-color: #ffffff;
         height: 8%;
@@ -29,8 +30,6 @@ div {
             }
 
         }
-
-
     }
 
     .view {
@@ -41,7 +40,6 @@ div {
         .ant-row {
             height: 90%;
             width: 100%;
-            min-width: 1000px;
             overflow: auto;
             .ant-col {
                 padding: 1% 1% 0;
@@ -52,7 +50,7 @@ div {
                 .mointor {
                     width: 100%;
                     height: 80%;
-                    min-height: 170px;
+                    // min-height: 170px;
                     padding: 0;
                     .dplayer{
                         height: 100%;
@@ -69,7 +67,7 @@ div {
         }
         .ant-table-wrapper {
             height: 90%;
-            overflow: auto;
+            overflow-y: auto;
             .ant-spin-nested-loading {
                 height: 90%;
                 .ant-table-row {

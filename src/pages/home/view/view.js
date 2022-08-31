@@ -149,7 +149,7 @@ function View() {
     }, [st, page, navigate])
     return (
         /*使用antd的格式，进行列表和视图的两种不同显示情况，使用按钮控制两种状态，分页器和搜索功能进行数据的改变*/
-        <div style={{ height: '100%' }}>
+        <div  style={{ height: '100%',width:'100% ' }}>
             <div className='view-search'><div>店铺搜索：
                 <Input value={text} allowClear={true} onChange={(e) => { setText(e.target.value) }} />
                 <Button shape='round' type='primary' onClick={()=>{}}>搜索</Button>
