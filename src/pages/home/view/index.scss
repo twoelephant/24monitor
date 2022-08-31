@@ -25,14 +25,7 @@ div {
             }
 
             button {
-                background-color: #1890ff;
-                color: #ffffff;
-                height: 50%;
-                border: none;
-                border-radius: 5px;
-                font-size: 10px;
-                line-height: 1%;
-                margin-left: 1%;
+                margin-left: 5px;
             }
 
         }
@@ -46,29 +39,31 @@ div {
         height: 90%;
         overflow: auto;
         .ant-row {
-            height:600px;
-            
+            height: 90%;
+            width: 100%;
+            min-width: 1000px;
+            overflow: auto;
             .ant-col {
-                
-                padding: 1%;
+                padding: 1% 1% 0;
                 height: 33.3%;
+                min-height: 210px;
+                min-width: 235px;
                 text-align: center;
-
                 .mointor {
                     width: 100%;
-                    height: 90%;
+                    height: 80%;
+                    min-height: 170px;
                     padding: 0;
-
-                    .dplayer-video-wrap  {
+                    .dplayer{
+                        height: 100%;
                         width: auto;
-                        margin: 0;
+                        aspect-ratio: 9/5;
                     }
                 }
-
                 .text {
                     height: 10%;
                     font-size: 15px;
-                    margin-top: 9px;
+                    margin: 0;
                 }
             }
         }
@@ -77,8 +72,7 @@ div {
             overflow: auto;
             .ant-spin-nested-loading {
                 height: 90%;
-                .ant-table-row{
-                   
+                .ant-table-row {
                     .red {
                         color: red
                     }
@@ -89,14 +83,14 @@ div {
             }
 
         }
-
         .mointor-bottom {
             display: flex;
             height: 5%;
             margin: 1.5% 0 0;
+
             .page {
                 margin: 0 0 0 auto;
-                
+
             }
         }
     }
