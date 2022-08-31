@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Hls from "hls.js";
 import DPlayer from "dplayer";
+import './monitors.scss';
 
 function Monitors(props) {
     window.Hls = Hls
@@ -20,7 +21,7 @@ function Monitors(props) {
         });
     }, [])
     return (
-        <div ref={aaplayer} style={{ width: '700px', height: '394px' }}></div>
+        <div ref={aaplayer}></div>
     )
 }
 

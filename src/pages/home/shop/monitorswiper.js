@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, DatePicker, Modal, Select, TimePicker, Tooltip } from "antd";
+import { Button, DatePicker, Modal, TimePicker, Tooltip } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Grid, Pagination, Navigation } from "swiper";
 import './monitorswiper.scss';
@@ -16,14 +16,11 @@ import moment from 'moment';
 
 function Monitorswiper() {
     window.Hls = Hls
-    const { Option } = Select;
     const IconFont = createFromIconfontCN({
         scriptUrl: '//at.alicdn.com/t/c/font_3615245_ir6mrdh0qj.js',
     });
 
-    const [isModalVisibl, setIsModalVisibl] = useState(false)
     const [isModalVisibremote, setIsModalVisibremote] = useState(false)
-    const [inline, setInline] = useState()
     const [voicon, setVoicon] = useState(1)
     const [monitorstatus, setMonitorstatus] = useState(1)
     const [acswitch, setAcswitch] = useState()    //空调开关
@@ -31,7 +28,6 @@ function Monitorswiper() {
     const [acmode, setAcmode] = useState()        //空调模式
     const [actemperature, setActemperature] = useState()   //空调温度
     const [temperature, setTemperature] = useState()     //室内温度
-    const [apivideo, setApivideo] = useState()
     const [videos, setVideos] = useState()
 
     const apilight = [               //电灯数据
@@ -70,16 +66,6 @@ function Monitorswiper() {
         if (monitorstatus !== 2) {
             setMonitorstatus(2)
         }
-    }
-
-    const handclick = () => {
-        setIsModalVisibl(true)
-    }
-    const handclick1 = () => {
-        setIsModalVisibl(true)
-    }
-    const handleCancel1 = () => {    //监控弹窗关闭
-        setIsModalVisibl(false)
     }
     const voiconhand = () => {       //点击麦克风
         if (voicon === 1) {
@@ -184,50 +170,12 @@ function Monitorswiper() {
 
     return (
         <>
-            <Modal
-                visible={isModalVisibl}
-                maskClosable={false}
-                onCancel={handleCancel1}
-                footer={null}
-                width={'800px'}
-            ><img src={inline} alt="" className="modalimg" /></Modal>
+            
             <div className="monitortitle">
                 <span style={{ color: monitorstatus === 1 ? '#1890ff' : '' }}
                     onClick={handtitle1}>实时监控</span>
                 <span style={{ color: monitorstatus === 1 ? '' : '#1890ff' }}
                     onClick={handtitle2}>历史监控</span>
-            </div>
-            <div className="mswiper">
-                <Swiper
-                    navigation={true}
-                    allowTouchMove={false}
-                    slidesPerView={2}
-                    grid={{
-                        rows: 2,
-                    }}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Navigation, Grid, Pagination]}
-                    className="mySwiper"
-                    style={{ display: videos ? '' : 'none' }}
-                >
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <SwiperSlide key={item.key} ><Monitors {...item}></Monitors></SwiperSlide>
-                        )
-                    })}
-                </Swiper>
-                <div style={{ display: !videos ? '' : 'none' }}
-                    className='smallmon'>
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <div style={{ margin: '0 50px' }} key={item.key}>
-                                <Monitors {...item}></Monitors>
-                            </div>
-                        )
-                    })}
-                </div>
             </div>
             <div className="monitorvoice" style={{ display: monitorstatus === 1 ? '' : 'none' }}>
                 <div className="monitorvoice">
@@ -252,7 +200,7 @@ function Monitorswiper() {
                         <Button type="primary" onClick={voiconhand} className='mikebtn'
                             style={{ marginLeft: '40px' }}>
                             <IconFont type={voicon === 1 ? "icon-17yuyin-3" : "icon-17yuyin-1"}
-                                style={{ fontSize: '23px' }} />
+                                style={{ fontSize: '30px' }} />
                         </Button>
                     </Tooltip>
                 </div>
@@ -266,6 +214,43 @@ function Monitorswiper() {
                     </span>
                 </div>
             </div>
+            <div className="mswiper">
+                <Swiper
+                    navigation={true}
+                    allowTouchMove={false}
+                    slidesPerView={2}
+                    grid={{
+                        rows: 2,
+                    }}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    modules={[Navigation, Grid, Pagination]}
+                    className="mySwiper"
+                    style={{ display: videos ? '' : 'none' }}
+                >
+                    {aaa && aaa.map((item) => {
+                        return (
+                            <SwiperSlide key={item.key} >
+                                <div className='aaplayerss'>
+                                    <Monitors {...item}></Monitors>
+                                </div>
+                            </SwiperSlide>
+                        )
+                    })}
+                </Swiper>
+                <div style={{ display: !videos ? '' : 'none' }}
+                    className='smallmon'>
+                    {aaa && aaa.map((item) => {
+                        return (
+                            <div key={item.key} className='aaplayers'>
+                                <Monitors {...item}></Monitors>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+
             <div style={{ display: monitorstatus !== 1 ? '' : 'none' }}
                 className='montimepicker'>
                 请选择时间：<DatePicker onChange={onChangedate} />
@@ -275,6 +260,7 @@ function Monitorswiper() {
                 <Button type="primary">确定</Button>
             </div>
             <Modal visible={isModalVisibremote}
+                title="店内遥控"
                 maskClosable={false}
                 onCancel={handleCremote}
                 footer={null}
