@@ -170,7 +170,7 @@ function Monitorswiper() {
 
     return (
         <>
-            
+
             <div className="monitortitle">
                 <span style={{ color: monitorstatus === 1 ? '#1890ff' : '' }}
                     onClick={handtitle1}>实时监控</span>
@@ -215,40 +215,46 @@ function Monitorswiper() {
                 </div>
             </div>
             <div className="mswiper">
-                <Swiper
-                    navigation={true}
-                    allowTouchMove={false}
-                    slidesPerView={2}
-                    grid={{
-                        rows: 2,
-                    }}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Navigation, Grid, Pagination]}
-                    className="mySwiper"
-                    style={{ display: videos ? '' : 'none' }}
-                >
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <SwiperSlide key={item.key} >
-                                <div className='aaplayerss'>
-                                    <Monitors {...item}></Monitors>
-                                </div>
-                            </SwiperSlide>
-                        )
-                    })}
-                </Swiper>
-                <div style={{ display: !videos ? '' : 'none' }}
-                    className='smallmon'>
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <div key={item.key} className='aaplayers'>
-                                <Monitors {...item}></Monitors>
-                            </div>
-                        )
-                    })}
-                </div>
+                {
+                    videos ?
+                        <Swiper
+                            navigation={true}
+                            allowTouchMove={false}
+                            slidesPerView={2}
+                            grid={{
+                                rows: 2,
+                            }}
+                            pagination={{
+                                clickable: true,
+                            }}
+                            modules={[Navigation, Grid, Pagination]}
+                            className="mySwiper"
+                           
+                        >
+                            {aaa && aaa.map((item) => {
+                                return (
+                                    <SwiperSlide key={item.key} >
+                                        <div className='aaplayerss'>
+                                            <Monitors {...item}></Monitors>
+                                        </div>
+                                    </SwiperSlide>
+                                )
+                            })}
+                        </Swiper>
+                        :
+                        <div 
+                            className='smallmon'>
+                            {aaa && aaa.map((item) => {
+                                return (
+                                    <div key={item.key} className='aaplayers'>
+                                        <Monitors {...item}></Monitors>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                }
+
+
             </div>
 
             <div style={{ display: monitorstatus !== 1 ? '' : 'none' }}
