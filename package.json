@@ -10,14 +10,15 @@
     "axios": "^0.27.2",
     "dplayer": "^1.27.0",
     "hls.js": "^0.14.15",
+    "qnweb-rtc": "^4.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "sass": "^1.54.5",
-    "web-vitals": "^2.1.4",
-    "swiper": "^8.3.2"
+    "swiper": "^8.3.2",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
