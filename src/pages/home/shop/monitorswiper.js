@@ -24,7 +24,7 @@ function Monitorswiper() {
     let b = date.getTime()
     let c = b + 3600000
     let d = c.toString()
-    var e = d.substring(0, 10)
+    let e = d.substring(0, 10)
 
     const [isModalVisibremote, setIsModalVisibremote] = useState(false)
     const [voicon, setVoicon] = useState(1)
@@ -110,6 +110,19 @@ function Monitorswiper() {
         console.log("publish success!");
         setVoicon(2)
 
+        // 在这里添加
+        // 获取页面上的一个元素作为播放画面的父元素
+        const localElement = document.getElementById('localtracks')
+        // 遍历本地采集的 Track 对象
+        for (const localTrack of localTracks) {
+            console.log(localTrack)
+            // 如果这是麦克风采集的音频 Track，我们就不播放它。
+            if (localTrack.isAudio()) continue
+            // 调用 Track 对象的 play 方法在这个元素下播放视频轨
+            localTrack.play(localElement, {
+                mirror: true,
+            })
+        }
     }
 
     // 这里的参数 client 是指刚刚初始化的 QNRTCClient 对象
@@ -293,6 +306,7 @@ function Monitorswiper() {
                         </Button>
                     </Tooltip>
                 </div>
+                <div id="localtracks"></div>
                 <div id="remotetracks"></div>
                 <Button type="primary" danger>开门</Button>
                 <div className="remote-control"
