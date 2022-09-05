@@ -159,16 +159,36 @@ function View() {
         /*使用antd的格式，进行列表和视图的两种不同显示情况，使用按钮控制两种状态，分页器和搜索功能进行数据的改变*/
         <div style={{ height: '100%', width: '100% ' }}>
             <div className='view-search'><div>店铺搜索：
-                <Input value={text} allowClear={true} onChange={(e) => { setText(e.target.value) }} />
-                <Button shape='round' type='primary' onClick={() => { }}>搜索</Button>
-            </div></div>
+                <Input value={text}
+                    allowClear={true}
+                    onChange={(e) => { setText(e.target.value) }} />
+                <Button shape='round'
+                    type='primary'
+                    onClick={() => { }}>搜索</Button>
+            </div>
+            </div>
             <div className='view'>
-                {st === 1 ? <Row >{newcol}</Row> : <Table columns={columns} size='small' dataSource={storeData} pagination={false} />}
+                {st === 1 ?
+                    <Row >{newcol}</Row> :
+                    <Table columns={columns}
+                        size='small'
+                        dataSource={storeData}
+                        pagination={false} />}
                 <div className='mointor-bottom'>
 
                     <Button onClick={lsChange}>{changeText}</Button>
-                    <div className='page'><Pagination defaultCurrent={page} onChange={(page,pageSize) => { setPage(page);setPageSize(pageSize) }}  pageSize={pageSize}
-                        showTitle={false} showTotal={(total) => `共${total}家店铺`} showSizeChanger={paget} pageSizeOptions={[12, 20, 50]} total={total} />
+                    <div className='page'>
+                        <Pagination defaultCurrent={page}
+                            onChange={(page, pageSize) => {
+                                setPage(page);
+                                setPageSize(pageSize)
+                            }}
+                            pageSize={pageSize}
+                            showTitle={false}
+                            showTotal={(total) => `共${total}家店铺`}
+                            showSizeChanger={paget}
+                            pageSizeOptions={[12, 20, 50]}
+                            total={total} />
                     </div>
                 </div>
             </div>

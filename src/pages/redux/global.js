@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import common from "../../utils/common";
 
 const NAMESPACE = 'global'
-
+// 模拟后台获得数据
 const thelist = [{ id: 2, name: '2 号店' },
 { id: 3, name: '3 号店' },
 { id: 4, name: '4 号店' },

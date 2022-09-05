@@ -8,9 +8,6 @@ import 'antd/dist/antd.min.css';
 import './Nav.scss'
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-// import { setShopId } from '../../redux/global'
-
-
 
 function getItem(label, key, icon, children, type) {
 
@@ -30,18 +27,20 @@ const Nav = (props) => {
 
     /* 模拟请求的数据 */
     useEffect(() => {
-        
+
         /* 一个用于中转的数组 */
-            Updata()
-        
+        Updata()
+
     }, [])
     function Updata() {
-       
+
         let newItem = []
         const num = data.shopId
         for (let item of num) {
             /* 给newItem[] 添加新对象 */
-            newItem.push(getItem(<NavLink to={'/home/shop'}>{item.name}</NavLink>, item.id, <div className='tixing'></div>))
+            newItem.push(getItem(<NavLink to={'/home/shop'}>
+                {item.name}
+            </NavLink>, item.id, <div className='tixing'></div>))
 
             /* 将更新过的 newItem[] 数组赋给newItem1*/
             setNewitem1(newItem)

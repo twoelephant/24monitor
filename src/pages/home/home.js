@@ -4,7 +4,6 @@ import Nav from "./nav/Nav"
 import './home.scss'
 
 function Home() {
-    // let [id,setId] = useState()
 
     return (
         <>
@@ -17,25 +16,6 @@ function Home() {
 
 
             </div>
-
-
-
-
-
-
-            {/* <div className="search">
-
-                    <div className="search1">
-                        <span>店铺搜索：</span>
-                        <input type="text" placeholder='请输入店铺名'></input>
-                        <button>搜索</button>
-                    </div>
-                    <div>监控、消息组件</div>
-
-                </div> */}
-
-
-
 
 
         </>
