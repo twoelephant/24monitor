@@ -52,13 +52,20 @@
     }
 }
 
-.monitortitle {
-    font-size: 25px;
-    font-weight: bold;
+.monrow01 {
 
-    span {
-        margin-left: 40px;
-        cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .monitortitle {
+        font-size: 25px;
+        font-weight: bold;
+
+        span {
+            margin-left: 40px;
+            cursor: pointer;
+        }
     }
 }
 
