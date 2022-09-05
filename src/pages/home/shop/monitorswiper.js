@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, DatePicker, Modal, Select, TimePicker, Tooltip } from "antd";
+import { Button, DatePicker, Modal, TimePicker, Tooltip } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Grid, Pagination, Navigation } from "swiper";
 import './monitorswiper.scss';
@@ -9,30 +9,40 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import 'antd/dist/antd.min.css';
 import { createFromIconfontCN } from '@ant-design/icons';
-import axios from "axios";
 import Hls from "hls.js";
 import Monitors from "./monitors";
 import moment from 'moment';
+import common from "../../../utils/common";
+import QNRTC from "qnweb-rtc";
 
 function Monitorswiper() {
     window.Hls = Hls
-    const { Option } = Select;
     const IconFont = createFromIconfontCN({
         scriptUrl: '//at.alicdn.com/t/c/font_3615245_ir6mrdh0qj.js',
     });
+    let date = new Date()
+    let b = date.getTime()
+    let c = b + 3600000
+    let d = c.toString()
+    var e = d.substring(0, 10)
 
-    const [isModalVisibl, setIsModalVisibl] = useState(false)
     const [isModalVisibremote, setIsModalVisibremote] = useState(false)
-    const [inline, setInline] = useState()
     const [voicon, setVoicon] = useState(1)
     const [monitorstatus, setMonitorstatus] = useState(1)
-    const [acswitch, setAcswitch] = useState()    //空调开关
-    const [windsp, setWindsp] = useState()        //风速调节
-    const [acmode, setAcmode] = useState()        //空调模式
-    const [actemperature, setActemperature] = useState()   //空调温度
-    const [temperature, setTemperature] = useState()     //室内温度
-    const [apivideo, setApivideo] = useState()
+    const [acswitch, setAcswitch] = useState('open')    //空调开关
+    const [windsp, setWindsp] = useState('小')        //风速调节
+    const [acmode, setAcmode] = useState('自动')        //空调模式
+    const [actemperature, setActemperature] = useState(22)   //空调温度
+    const [temperature, setTemperature] = useState(25)     //室内温度
     const [videos, setVideos] = useState()
+    const [roomToken, setRoomToken] = useState()
+    const [roomName, setRoomName] = useState('002')
+    const [userId, setUserId] = useState('002')
+    const [expireAt, setExpireAt] = useState(e)
+    const [sloading, setSloading] = useState(false)
+    const [sload, setSload] = useState(false)
+    const [mclient, setMclient] = useState({})
+
 
     const apilight = [               //电灯数据
         {
@@ -71,21 +81,78 @@ function Monitorswiper() {
             setMonitorstatus(2)
         }
     }
+    // 确认引入成功
+    console.log("current version", QNRTC.VERSION);
+    // 这里采用的是 async/await 的异步方案，您也可以根据需要或者习惯替换成 Promise 的写法
+    async function joinRoom() {
+        setSloading(true)
+        // setSload(true)
+        // 创建QNRTCClient对象
+        const client = QNRTC.createClient();
+        setMclient(client)
+        // 需要先监听对应事件再加入房间
+        autoSubscribe(client)
+        await client.join(roomToken);
+        console.log("joinRoom success!");
+        setSloading(false)
+        await publish(client)
+    }
 
-    const handclick = () => {
-        setIsModalVisibl(true)
+    // 增加一个函数 publish，用于采集并发布自己的媒体流
+    // 这里的参数 client 是指刚刚初始化的 QNRTCClient 对象
+    async function publish(client) {
+        // 同时采集麦克风音频和摄像头视频轨道。
+        // 这个函数会返回一组audio track 与 video track
+        const localTracks = await QNRTC.createMicrophoneAndCameraTracks();
+        console.log("my local tracks", localTracks);
+        // 将刚刚的 Track 列表发布到房间中
+        await client.publish(localTracks);
+        console.log("publish success!");
+        setVoicon(2)
+
     }
-    const handclick1 = () => {
-        setIsModalVisibl(true)
+
+    // 这里的参数 client 是指刚刚初始化的 QNRTCClient 对象
+    async function subscribe(client, tracks) {
+        // 传入 Track 对象数组调用订阅方法发起订阅，异步返回成功订阅的 Track 对象。
+        const remoteTracks = await client.subscribe(tracks)
+
+        // 选择页面上的一个元素作为父元素，播放远端的音视频轨
+        const remoteElement = document.getElementById('remotetracks')
+        // 遍历返回的远端 Track，调用 play 方法完成在页面上的播放
+        for (const remoteTrack of [
+            ...remoteTracks.videoTracks,
+            ...remoteTracks.audioTracks,
+        ]) {
+            remoteTrack.play(remoteElement)
+        }
     }
-    const handleCancel1 = () => {    //监控弹窗关闭
-        setIsModalVisibl(false)
+
+    // 这里的参数 client 是指刚刚初始化的 QNRTCClient 对象, 同上
+    function autoSubscribe(client) {
+        // 添加事件监听，当房间中出现新的 Track 时就会触发，参数是 trackInfo 列表
+        client.on('user-published', (userId, tracks) => {
+            console.log('user-published!', userId, tracks)
+            subscribe(client, tracks)
+                .then(() => console.log('subscribe success!'))
+                .catch((e) => console.error('subscribe error', e))
+        })
+        // 就是这样，就像监听 DOM 事件一样通过 on 方法监听相应的事件并给出处理函数即可
     }
+
+    async function leave(e) {   //离开房间
+        console.log(e);
+        await e.leave()
+        setVoicon(1)
+    }
+
     const voiconhand = () => {       //点击麦克风
-        if (voicon === 1) {
-            setVoicon(2)
-        } else if (voicon !== 1) {
-            setVoicon(1)
+        if (voicon === 1) {          //开启麦克风
+            joinRoom()
+
+        } else if (voicon !== 1) {    //关闭麦克风
+
+            leave(mclient)
         }
     }
 
@@ -145,18 +212,18 @@ function Monitorswiper() {
     }
 
     const aaa = [          //监控摄像头的数组
-        {
-            key: 1,
-            url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
-        },
-        {
-            key: 2,
-            url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
-        },
-        {
-            key: 3,
-            url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
-        },
+        // {
+        //     key: 1,
+        //     url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
+        // },
+        // {
+        //     key: 2,
+        //     url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
+        // },
+        // {
+        //     key: 3,
+        //     url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
+        // },
         // {
         //     key: 4,
         //     url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
@@ -167,67 +234,33 @@ function Monitorswiper() {
         // }
     ]
 
-
     useEffect(() => {
-        setAcswitch('open')
-        setWindsp("小")
-        setAcmode("自动")
-        setActemperature(22)
-        setTemperature(25)
-        console.log(aaa.length);
+        showTable()
+    }, [])
+
+    const showTable = () => {
         if (aaa.length > 4) {
             setVideos(true)
         } else {
             setVideos(false)
         }
-    }, [])
+
+        common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
+        }).then((res) => {
+            setRoomToken(res)
+            console.log(res);
+        })
+
+    }
 
     return (
         <>
-            <Modal
-                visible={isModalVisibl}
-                maskClosable={false}
-                onCancel={handleCancel1}
-                footer={null}
-                width={'800px'}
-            ><img src={inline} alt="" className="modalimg" /></Modal>
+
             <div className="monitortitle">
                 <span style={{ color: monitorstatus === 1 ? '#1890ff' : '' }}
                     onClick={handtitle1}>实时监控</span>
                 <span style={{ color: monitorstatus === 1 ? '' : '#1890ff' }}
                     onClick={handtitle2}>历史监控</span>
-            </div>
-            <div className="mswiper">
-                <Swiper
-                    navigation={true}
-                    allowTouchMove={false}
-                    slidesPerView={2}
-                    grid={{
-                        rows: 2,
-                    }}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    modules={[Navigation, Grid, Pagination]}
-                    className="mySwiper"
-                    style={{ display: videos ? '' : 'none' }}
-                >
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <SwiperSlide key={item.key} ><Monitors {...item}></Monitors></SwiperSlide>
-                        )
-                    })}
-                </Swiper>
-                <div style={{ display: !videos ? '' : 'none' }}
-                    className='smallmon'>
-                    {aaa && aaa.map((item) => {
-                        return (
-                            <div style={{ margin: '0 50px' }} key={item.key}>
-                                <Monitors {...item}></Monitors>
-                            </div>
-                        )
-                    })}
-                </div>
             </div>
             <div className="monitorvoice" style={{ display: monitorstatus === 1 ? '' : 'none' }}>
                 <div className="monitorvoice">
@@ -248,14 +281,20 @@ function Monitorswiper() {
                         <Option value='预设语音4'></Option>
                     </Select>
                     <Button type="primary">发送</Button> */}
-                    <Tooltip title={voicon === 1 ? "开启麦克风" : "关闭麦克风"}>
-                        <Button type="primary" onClick={voiconhand} className='mikebtn'
+                    <Tooltip title={voicon === 1 ? "开启麦克风" : "关闭麦克风"}
+                        defaultVisible={false}>
+                        <Button type="primary"
+                            onClick={voiconhand}
+                            className='mikebtn'
+                            // loading={sloading}
                             style={{ marginLeft: '40px' }}>
                             <IconFont type={voicon === 1 ? "icon-17yuyin-3" : "icon-17yuyin-1"}
-                                style={{ fontSize: '23px' }} />
+                                style={{ fontSize: '30px' }} />
                         </Button>
                     </Tooltip>
                 </div>
+                <div id="remotetracks"></div>
+                <Button type="primary" danger>开门</Button>
                 <div className="remote-control"
                     onClick={handleremote}>
                     <span style={{ marginRight: '10px' }}>
@@ -266,6 +305,42 @@ function Monitorswiper() {
                     </span>
                 </div>
             </div>
+            <div className="mswiper">
+                {videos ?
+                    <Swiper
+                        navigation={true}
+                        allowTouchMove={false}
+                        slidesPerView={2}
+                        grid={{
+                            rows: 2,
+                        }}
+                        pagination={{
+                            clickable: true,
+                        }}
+                        modules={[Navigation, Grid, Pagination]}
+                        className="mySwiper"
+                    >
+                        {aaa && aaa.map((item) => {
+                            return (
+                                <SwiperSlide key={item.key} >
+                                    <div className='aaplayerss'>
+                                        <Monitors {...item}></Monitors>
+                                    </div>
+                                </SwiperSlide>
+                            )
+                        })}
+                    </Swiper> :
+                    <div className='smallmon'>
+                        {aaa && aaa.map((item) => {
+                            return (
+                                <div key={item.key} className='aaplayers'>
+                                    <Monitors {...item}></Monitors>
+                                </div>
+                            )
+                        })}
+                    </div>}
+            </div>
+
             <div style={{ display: monitorstatus !== 1 ? '' : 'none' }}
                 className='montimepicker'>
                 请选择时间：<DatePicker onChange={onChangedate} />
@@ -275,6 +350,7 @@ function Monitorswiper() {
                 <Button type="primary">确定</Button>
             </div>
             <Modal visible={isModalVisibremote}
+                title="店内遥控"
                 maskClosable={false}
                 onCancel={handleCremote}
                 footer={null}
