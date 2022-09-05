@@ -48,9 +48,8 @@ div {
                 min-width: 235px;
                 text-align: center;
                 .mointor {
-                    width: 100%;
                     height: 80%;
-                    // min-height: 170px;
+                    
                     padding: 0;
                     .dplayer{
                         height: 100%;
@@ -62,6 +61,7 @@ div {
                     height: 10%;
                     font-size: 15px;
                     margin: 0;
+                    text-align: center;
                 }
             }
         }

@@ -6,13 +6,16 @@ import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
 import DPlayer from 'dplayer';
 import Hls from 'hls.js'
+import { useDispatch } from "react-redux";
+import { upShopId } from '../../redux/global'
 
 /*模拟数据*/
 const dataArry = []
 for (let i = 0; i < 2; i++) {
+    const s = i + 1
     dataArry.push({
         key: i,
-        storeName: '商铺' + i,
+        storeName: s + '号店',
         nowStatus: '正常营业中',
         storeStatus: '异常',
         phone: '1785524958',
@@ -22,6 +25,7 @@ for (let i = 0; i < 2; i++) {
 
 /*定义一个view组件，渲染店铺信息，有列表、视图 两种模式*/
 function View() {
+    const dispath = useDispatch()
     window.Hls = Hls
     /*定义相关数据*/
     let [st, setSt] = useState(1)
@@ -39,15 +43,19 @@ function View() {
         if (st === 1) {
             setSt(2)
             setchangeText('列表')
-            setPageSize(15)
             setPaget(true)
         }
         else {
             setSt(1)
             setchangeText('视图')
-            setPageSize(9)
             setPaget(false)
+            setPageSize(12)
         }
+    }
+    /*定义点击事件，点击后列表更新*/
+    function first() {
+        console.log(1)
+        dispath(upShopId())
     }
     /*定义列表头信息，规定每一列*/
     const columns = [
@@ -120,7 +128,7 @@ function View() {
                 cols.push(
                     <Col key={i} span={18 / 3}>
                         <div className='mointor' ><div id={'dplayer' + i} /></div>
-                        <div className='text' onClick={() => { navigate('/home/shop/1') }}>{dataArry[i].storeStatus}</div>
+                        <div className='text' onClick={() => { navigate('/home/shop'); first() }}>{dataArry[i].storeName}</div>
                     </Col>,
                 );
                 setTimeout(() => {
@@ -149,18 +157,19 @@ function View() {
     }, [st, page, navigate])
     return (
         /*使用antd的格式，进行列表和视图的两种不同显示情况，使用按钮控制两种状态，分页器和搜索功能进行数据的改变*/
-        <div  style={{ height: '100%',width:'100% ' }}>
+        <div style={{ height: '100%', width: '100% ' }}>
             <div className='view-search'><div>店铺搜索：
                 <Input value={text} allowClear={true} onChange={(e) => { setText(e.target.value) }} />
-                <Button shape='round' type='primary' onClick={()=>{}}>搜索</Button>
+                <Button shape='round' type='primary' onClick={() => { }}>搜索</Button>
             </div></div>
             <div className='view'>
                 {st === 1 ? <Row >{newcol}</Row> : <Table columns={columns} size='small' dataSource={storeData} pagination={false} />}
                 <div className='mointor-bottom'>
 
                     <Button onClick={lsChange}>{changeText}</Button>
-                    <div className='page'><Pagination defaultCurrent={page} onChange={(page) => { setPage(page) }} defaultPageSize={pageSize}
-                        showTitle={false} showTotal={(total) => `共${total}家店铺`} showSizeChanger={paget} pageSizeOptions={[12, 20, 50]} total={total} /></div>
+                    <div className='page'><Pagination defaultCurrent={page} onChange={(page,pageSize) => { setPage(page);setPageSize(pageSize) }}  pageSize={pageSize}
+                        showTitle={false} showTotal={(total) => `共${total}家店铺`} showSizeChanger={paget} pageSizeOptions={[12, 20, 50]} total={total} />
+                    </div>
                 </div>
             </div>
         </div>
