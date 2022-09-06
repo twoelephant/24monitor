@@ -9,14 +9,11 @@ import Shop from "./pages/home/shop/shop";
 function App() {
   return (
     <HashRouter>
-
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="home/*" element={<Home />}>
           <Route index element={<Monitor />}></Route>
           <Route path="shop" element={<Shop />}></Route>
-          {/* <Route path="user2" element={<User2/>}></Route> */}
-
         </Route>
       </Routes>
     </HashRouter>
