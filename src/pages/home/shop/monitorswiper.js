@@ -30,7 +30,7 @@ function Monitorswiper() {
     const [monitorstatus, setMonitorstatus] = useState(1)
     const [acswitch, setAcswitch] = useState('open')    //空调开关
     const [windsp, setWindsp] = useState('小')        //风速调节
-    const [acmode, setAcmode] = useState('自动')        //空调模式
+    const [acmode, setAcmode] = useState('制冷')        //空调模式
     const [actemperature, setActemperature] = useState(22)   //空调温度
     const [temperature, setTemperature] = useState(25)     //室内温度
     const [videos, setVideos] = useState()
@@ -41,6 +41,15 @@ function Monitorswiper() {
     const [sload, setSload] = useState(false)
     const [mclient, setMclient] = useState({})
     const [vloading, setVloading] = useState(true)
+    const [temvalue, setTemvalue] = useState('0110')
+    const [winvalue, setWinvalue] = useState('11')
+    const [acmvalue, setAcmvalue] = useState('01')
+    const [acsvalue, setAcsvalue] = useState('1')
+    let aircode
+    let va1 = acsvalue
+    let va2 = acmvalue
+    let va3 = winvalue
+    let va4 = temvalue
 
     const apilight = [               //电灯数据
         {
@@ -78,7 +87,7 @@ function Monitorswiper() {
         }
     }
     // 确认引入成功
-    console.log("current version", QNRTC.VERSION);
+    // console.log("current version", QNRTC.VERSION);
     // 这里采用的是 async/await 的异步方案，您也可以根据需要或者习惯替换成 Promise 的写法
     async function joinRoom() {
         setVloading(false)
@@ -175,48 +184,117 @@ function Monitorswiper() {
             setAcmode("")
             setActemperature("")
             setTemperature("")
+            setAcsvalue('0')
+            va1 = '0'
+            new4()
         } else if (acswitch === 'close') {
             setAcswitch('open')
+            setAcmvalue('11')
+            setTemvalue('0110')
+            setAcsvalue('1')
+            setWinvalue('11')
+            setWindsp("小")
+            setAcmode("制冷")
+            setActemperature("22")
+            aircode = '111010110'
         }
     }
 
     const handacstatus = () => {         //空调模式
         if (acmode === '送风') {
             setAcmode('制热')
+            setAcmvalue('10')
+            va2 = '10'
+            new4()
         } else if (acmode === '制热') {
             setAcmode('制冷')
+            setAcmvalue('01')
+            va2 = '01'
+            new4()
         } else if (acmode === '制冷') {
             setAcmode('除湿')
-        }else if (acmode === '除湿') {
+            setAcmvalue('11')
+            va2 = '11'
+            new4()
+        } else if (acmode === '除湿') {
             setAcmode('送风')
+            setAcmvalue('00')
+            va2 = '00'
+            new4()
         }
     }
 
     const handwindsp = () => {           //风速调节
         if (windsp === '小') {
             setWindsp('中')
+            setWinvalue('10')
+            va3 = '10'
+            new4()
         } else if (windsp === '中') {
             setWindsp('大')
+            setWinvalue('01')
+            va3 = '01'
+            new4()
         } else if (windsp === '大') {
             setWindsp('自动')
-        }else if (windsp === '自动') {
+            setWinvalue('00')
+            va3 = '00'
+            new4()
+
+        } else if (windsp === '自动') {
             setWindsp('小')
+            setWinvalue('11')
+            va3 = '11'
+            new4()
+
         }
     }
 
     const handminus = () => {          //减温度
-        if (actemperature > 18) {
+        if (actemperature > 16) {
             let actem = actemperature
             --actem
             setActemperature(actem)
+            let k = parseInt(actem) - 16
+            let newk = k.toString(2)
+            setTemvalue(newk.padStart(4, '0'))
+            va4 = newk.padStart(4, '0')
+            new4()
         }
     }
-    const handadd = () => {          //加温度
-        if (actemperature < 30) {
+
+    const handadd = () => {   //加温度
+        // clearTimeout(timetime)
+        if (actemperature < 32) {
             let actem = actemperature
             ++actem
             setActemperature(actem)
+            let k = parseInt(actem) - 16
+            let newk = k.toString(2)
+            setTemvalue(newk.padStart(4, '0'))
+            va4 = newk.padStart(4, '0')
+            new4()
+
+            
         }
+    }
+
+
+    //定义一个点击改变数据事件
+    let timetime
+    const new4 = () => {
+        aircode = va1 + va2 + va3 + va4
+        console.log(aircode)
+        
+    }
+    const new3 =()=>{
+        clearTimeout(timetime)
+        timetime = setTimeout(() => {
+            
+            console.log(111111)
+
+        }, 1000)
+
     }
 
     const aaa = [          //监控摄像头的数组
@@ -253,10 +331,10 @@ function Monitorswiper() {
             setVideos(false)
         }
 
-        common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
-        }).then((res) => {
-            setRoomToken(res)
-        })
+        // common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
+        // }).then((res) => {
+        //     setRoomToken(res)
+        // })
 
     }
 
