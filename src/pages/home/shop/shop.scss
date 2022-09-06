@@ -1,12 +1,8 @@
 .shopmonitor {
     position: fixed;
     left: 220px;
-
-    // position: relative;
-    // left: 800px;
     width: calc(100% - 220px);
     height: 100%;
-    // overflow: hidden;
     overflow: auto;
     background-color: white;
 }

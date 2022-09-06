@@ -1,6 +1,5 @@
 import React from 'react'
 import { useParams } from 'react-router'
-import { useSearchParams } from 'react-router-dom'
 import Monitorswiper from './monitorswiper'
 import './shop.scss'
 
@@ -9,7 +8,6 @@ export default function Shop() {
   
   return (
     <div className='shopmonitor'>
-      
       <Monitorswiper></Monitorswiper>
     </div>
 

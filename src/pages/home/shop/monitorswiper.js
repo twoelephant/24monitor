@@ -7,7 +7,6 @@ import "swiper/css";
 import "swiper/css/grid";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import 'antd/dist/antd.min.css';
 import { createFromIconfontCN, PoweroffOutlined } from '@ant-design/icons';
 import Hls from "hls.js";
 import Monitors from "./monitors";
@@ -37,14 +36,11 @@ function Monitorswiper() {
     const [videos, setVideos] = useState()
     const [roomToken, setRoomToken] = useState()
     const [roomName, setRoomName] = useState('001')
-
     const [userId, setUserId] = useState('001')
-
     const [expireAt, setExpireAt] = useState(e)
     const [sload, setSload] = useState(false)
     const [mclient, setMclient] = useState({})
     const [vloading, setVloading] = useState(true)
-
 
     const apilight = [               //电灯数据
         {
@@ -66,11 +62,9 @@ function Monitorswiper() {
     ]
 
     const onChangedate = (date, dateString) => {    //日期选择器
-        console.log(date, dateString);
     }
 
     const onChangetime = (time, tiemString) => {   //时间选择器
-        console.log(time, tiemString);
     }
 
     const handtitle1 = () => {      //实时监控
@@ -94,7 +88,6 @@ function Monitorswiper() {
         // 需要先监听对应事件再加入房间
         autoSubscribe(client)
         await client.join(roomToken);
-        console.log("joinRoom success!");
         await publish(client)
     }
 
@@ -106,10 +99,8 @@ function Monitorswiper() {
         // const localTracks = await QNRTC.createMicrophoneAndCameraTracks();
         //单采集麦克风
         const localTracks = await QNRTC.createMicrophoneAudioTrack();
-        console.log("my local tracks", localTracks);
         // 将刚刚的 Track 列表发布到房间中
         await client.publish(localTracks);
-        console.log("publish success!");
         setVoicon(2)
         setVloading(true)
 
@@ -118,7 +109,6 @@ function Monitorswiper() {
         const localElement = document.getElementById('localtracks')
         // 遍历本地采集的 Track 对象
         for (const localTrack of localTracks) {
-            console.log(localTrack)
             // 如果这是麦克风采集的音频 Track，我们就不播放它。
             if (localTrack.isAudio()) continue
             // 调用 Track 对象的 play 方法在这个元素下播放视频轨
@@ -148,7 +138,6 @@ function Monitorswiper() {
     function autoSubscribe(client) {
         // 添加事件监听，当房间中出现新的 Track 时就会触发，参数是 trackInfo 列表
         client.on('user-published', (userId, tracks) => {
-            console.log('user-published!', userId, tracks)
             subscribe(client, tracks)
                 .then(() => console.log('subscribe success!'))
                 .catch((e) => console.error('subscribe error', e))
@@ -157,7 +146,6 @@ function Monitorswiper() {
     }
 
     async function leave(e) {   //离开房间
-        console.log(e);
         await e.leave()
         setVoicon(1)
     }
@@ -264,7 +252,6 @@ function Monitorswiper() {
         common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
         }).then((res) => {
             setRoomToken(res)
-            console.log(res);
         })
 
     }

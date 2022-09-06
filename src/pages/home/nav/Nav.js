@@ -27,13 +27,11 @@ const Nav = (props) => {
 
     /* 模拟请求的数据 */
     useEffect(() => {
-
-        /* 一个用于中转的数组 */
         Updata()
-
     }, [])
-    function Updata() {
 
+    function Updata() {
+        /* 一个用于中转的数组 */
         let newItem = []
         const num = data.shopId
         for (let item of num) {
@@ -41,32 +39,26 @@ const Nav = (props) => {
             newItem.push(getItem(<NavLink to={'/home/shop'}>
                 {item.name}
             </NavLink>, item.id, <div className='tixing'></div>))
-
             /* 将更新过的 newItem[] 数组赋给newItem1*/
             setNewitem1(newItem)
         }
     }
 
-    const [collapsed,] = useState(false);
-
     return (
-        <>
-            <div className='nav'>
 
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    theme="dark"
-                    inlineCollapsed={collapsed}
-                    items={[
-                        getItem(<NavLink to='/home'>监控</NavLink>, '1', <EyeOutlined />),
-                        getItem('消息通知', 'sub1', <BellOutlined />, newItem1),
-                    ]}
-                />
-            </div>
-
-        </>
+        <div className='nav'>
+            <Menu
+                defaultSelectedKeys={['1']}
+                defaultOpenKeys={['sub1']}
+                mode="inline"
+                theme="dark"
+                inlineCollapsed={false}
+                items={[
+                    getItem(<NavLink to='/home'>监控</NavLink>, '1', <EyeOutlined />),
+                    getItem('消息通知', 'sub1', <BellOutlined />, newItem1),
+                ]}
+            />
+        </div>
 
     );
 };

@@ -1,96 +1,99 @@
-@import '~antd/dist/antd.css';
+.view-search {
+    background-color: #ffffff;
+    height: 8%;
+    margin-bottom: 1%;
+    padding-left: 2%;
+    line-height: 100%;
+    .search-input {
+        line-height: 40.9px;
+        height: 100%;
+        font-size: 15px;
+        align-items: center;
+        display: -webkit-flex;
 
-div {
-    
-    .view-search {
-        background-color: #ffffff;
-        height: 8%;
-        margin-bottom: 1%;
-        padding-left: 2%;
-        line-height: 100%;
+        .ant-input-affix-wrapper {
+            height: 50%;
+            width: 25%;
+        }
 
-        div {
-            line-height: 40.9px;
-            height: 100%;
-            font-size: 15px;
-            align-items: center;
-            display: -webkit-flex;
+        span {
+            margin-left: 1%;
+        }
 
-            .ant-input-affix-wrapper {
-                height: 50%;
-                width: 25%;
+        button {
+            margin-left: 5px;
+        }
+
+    }
+}
+
+.view {
+    background-color: #ffffff;
+    padding: 10px;
+    height: 90%;
+    overflow: auto;
+
+    .ant-row {
+        height: 90%;
+        width: 100%;
+        overflow: auto;
+
+        .ant-col {
+            padding: 1% 1% 0;
+            height: 33.3%;
+            min-height: 210px;
+            min-width: 235px;
+            text-align: center;
+           
+            .mointor {
+                height: 80%;
+                padding: 0;
+
+                .dplayer {
+                    height: 100%;
+                    width: auto;
+                    aspect-ratio: 9/5;
+                    margin-left: 10px;
+                }
             }
 
-            span {
-                margin-left: 1%;
+            .text {
+                height: 10%;
+                font-size: 15px;
+                margin: 0;
+                text-align: center;
             }
-
-            button {
-                margin-left: 5px;
-            }
-
         }
     }
 
-    .view {
-        background-color: #ffffff;
-        padding: 10px;
+    .ant-table-wrapper {
         height: 90%;
-        overflow: auto;
-        .ant-row {
+        overflow-y: auto;
 
+        .ant-spin-nested-loading {
             height: 90%;
-            width: 100%;
-            overflow: auto;
-            .ant-col {
-                padding: 1% 1% 0;
-                height: 33.3%;
-                min-height: 210px;
-                min-width: 235px;
-                text-align: center;
-                .mointor {
-                    height: 80%;
-                    
-                    padding: 0;
-                    .dplayer{
-                        height: 100%;
-                        width: auto;
-                        aspect-ratio: 9/5;
-                    }
+
+            .ant-table-row {
+                .red {
+                    color: red
                 }
-                .text {
-                    height: 10%;
-                    font-size: 15px;
-                    margin: 0;
-                    text-align: center;
+
+                .green {
+                    color: green;
                 }
             }
         }
-        .ant-table-wrapper {
-            height: 90%;
-            overflow-y: auto;
-            .ant-spin-nested-loading {
-                height: 90%;
-                .ant-table-row {
-                    .red {
-                        color: red
-                    }
-                    .green {
-                        color: green;
-                    }
-                }
-            }
 
-        }
-        .mointor-bottom {
-            display: flex;
-            height: 5%;
-            margin: 1.5% 0 0;
+    }
 
-            .page {
-                margin: 0 0 0 auto;
+    .mointor-bottom {
+        display: flex;
+        height: 5%;
+        margin: 1.5% 0 0;
 
-            }
+        .page {
+            margin: 0 0 0 auto;
+
         }
     }
 }

@@ -53,8 +53,7 @@ function View() {
         }
     }
     /*定义点击事件，点击后列表更新*/
-    function first() {
-        console.log(1)
+    function handlerClick() {
         dispath(upShopId())
     }
     /*定义列表头信息，规定每一列*/
@@ -64,7 +63,6 @@ function View() {
             dataIndex: 'storeName',
             key: 'storeName',
             render(text) {
-
                 return <NavLink to='/home/shop/1'>{text}</NavLink>
             }
         },
@@ -124,11 +122,10 @@ function View() {
             const videos = [];
 
             for (let i = 0; i < dataArry.length; i++) {
-
                 cols.push(
                     <Col key={i} span={18 / 3}>
                         <div className='mointor' ><div id={'dplayer' + i} /></div>
-                        <div className='text' onClick={() => { navigate('/home/shop'); first() }}>{dataArry[i].storeName}</div>
+                        <div className='text' onClick={() => { navigate('/home/shop'); handlerClick() }}>{dataArry[i].storeName}</div>
                     </Col>,
                 );
                 setTimeout(() => {
@@ -141,7 +138,7 @@ function View() {
                         autoplay: true,
                         live: true,
                         video: {
-                            url: 'http://180.101.136.84:1370/test20220806/31011500991320015316.m3u8',
+                            url: '',
                             type: 'hls'
                         },
                     });
@@ -149,23 +146,21 @@ function View() {
                 }, 10);
             }
             setNewcol(cols)
-
-
         }
 
-
-    }, [st, page, navigate])
+    }, [st, page])
     return (
         /*使用antd的格式，进行列表和视图的两种不同显示情况，使用按钮控制两种状态，分页器和搜索功能进行数据的改变*/
         <div style={{ height: '100%', width: '100% ' }}>
-            <div className='view-search'><div>店铺搜索：
-                <Input value={text}
-                    allowClear={true}
-                    onChange={(e) => { setText(e.target.value) }} />
-                <Button shape='round'
-                    type='primary'
-                    onClick={() => { }}>搜索</Button>
-            </div>
+            <div className='view-search'>
+                <div className='search-input'>店铺搜索：
+                    <Input value={text}
+                        allowClear={true}
+                        onChange={(e) => { setText(e.target.value) }} />
+                    <Button shape='round'
+                        type='primary'
+                        onClick={() => { }}>搜索</Button>
+                </div>
             </div>
             <div className='view'>
                 {st === 1 ?
