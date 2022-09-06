@@ -8,7 +8,7 @@ import "swiper/css/grid";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import 'antd/dist/antd.min.css';
-import { createFromIconfontCN } from '@ant-design/icons';
+import { createFromIconfontCN, PoweroffOutlined } from '@ant-design/icons';
 import Hls from "hls.js";
 import Monitors from "./monitors";
 import moment from 'moment';
@@ -38,10 +38,13 @@ function Monitorswiper() {
     const [roomToken, setRoomToken] = useState()
     const [roomName, setRoomName] = useState('001')
     const [userId, setUserId] = useState('002')
+
+
+
     const [expireAt, setExpireAt] = useState(e)
-    const [sloading, setSloading] = useState(false)
     const [sload, setSload] = useState(false)
     const [mclient, setMclient] = useState({})
+    const [vloading, setVloading] = useState(true)
 
 
     const apilight = [               //电灯数据
@@ -85,8 +88,7 @@ function Monitorswiper() {
     console.log("current version", QNRTC.VERSION);
     // 这里采用的是 async/await 的异步方案，您也可以根据需要或者习惯替换成 Promise 的写法
     async function joinRoom() {
-        setSloading(true)
-        // setSload(true)
+        setVloading(false)
         // 创建QNRTCClient对象
         const client = QNRTC.createClient();
         setMclient(client)
@@ -94,7 +96,6 @@ function Monitorswiper() {
         autoSubscribe(client)
         await client.join(roomToken);
         console.log("joinRoom success!");
-        setSloading(false)
         await publish(client)
     }
 
@@ -103,12 +104,15 @@ function Monitorswiper() {
     async function publish(client) {
         // 同时采集麦克风音频和摄像头视频轨道。
         // 这个函数会返回一组audio track 与 video track
-        const localTracks = await QNRTC.createMicrophoneAndCameraTracks();
+        // const localTracks = await QNRTC.createMicrophoneAndCameraTracks();
+        //单采集麦克风
+        const localTracks = await QNRTC.createMicrophoneAudioTrack();
         console.log("my local tracks", localTracks);
         // 将刚刚的 Track 列表发布到房间中
         await client.publish(localTracks);
         console.log("publish success!");
         setVoicon(2)
+        setVloading(true)
 
         // 在这里添加
         // 获取页面上的一个元素作为播放画面的父元素
@@ -268,43 +272,34 @@ function Monitorswiper() {
 
     return (
         <>
-
-            <div className="monitortitle">
-                <span style={{ color: monitorstatus === 1 ? '#1890ff' : '' }}
-                    onClick={handtitle1}>实时监控</span>
-                <span style={{ color: monitorstatus === 1 ? '' : '#1890ff' }}
-                    onClick={handtitle2}>历史监控</span>
+            <div className="monrow01">
+                <div className="monitortitle">
+                    <span style={{ color: monitorstatus === 1 ? '#1890ff' : '' }}
+                        onClick={handtitle1}>实时监控</span>
+                    <span style={{ color: monitorstatus === 1 ? '' : '#1890ff' }}
+                        onClick={handtitle2}>历史监控</span>
+                </div>
+                <Tooltip title="关闭当前页" placement="left">
+                    <Button type="primary"
+                        icon={<PoweroffOutlined />}
+                        style={{ borderRadius: '50%' }}></Button>
+                </Tooltip>
             </div>
             <div className="monitorvoice" style={{ display: monitorstatus === 1 ? '' : 'none' }}>
                 <div className="monitorvoice">
-                    {/* <Tooltip title="编辑预设语音">
-                        <IconFont type="icon-shengyin"
-                            style={{ fontSize: '40px' }}
-                            className="iconshengyin" />
-                    </Tooltip>
-                    <span style={{ fontSize: '15px' }}>
-                        选择：
-                    </span>
-                    <Select
-                        allowClear
-                        placeholder="请选择">
-                        <Option value='预设语音1'></Option>
-                        <Option value='预设语音2'></Option>
-                        <Option value='预设语音3'></Option>
-                        <Option value='预设语音4'></Option>
-                    </Select>
-                    <Button type="primary">发送</Button> */}
-                    <Tooltip title={voicon === 1 ? "开启麦克风" : "关闭麦克风"}
+                    {vloading ? <Tooltip title={voicon === 1 ? "开启麦克风" : "关闭麦克风"}
                         defaultVisible={false}>
                         <Button type="primary"
                             onClick={voiconhand}
                             className='mikebtn'
-                            // loading={sloading}
                             style={{ marginLeft: '40px' }}>
                             <IconFont type={voicon === 1 ? "icon-17yuyin-3" : "icon-17yuyin-1"}
                                 style={{ fontSize: '30px' }} />
                         </Button>
-                    </Tooltip>
+                    </Tooltip> : <Button loading
+                        type="primary" className='mikebtn'
+                        style={{ marginLeft: '40px', width: '60px' }}></Button>}
+
                 </div>
                 <div id="localtracks"></div>
                 <div id="remotetracks"></div>

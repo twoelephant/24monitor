@@ -9,7 +9,6 @@ function Monitors(props) {
     useEffect(() => {
         console.log(props);
         console.log(props.url);
-
         const dp = new DPlayer({
             container: aaplayer.current,     //视频容器
             autoplay: true,
