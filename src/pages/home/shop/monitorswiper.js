@@ -181,12 +181,14 @@ function Monitorswiper() {
     }
 
     const handacstatus = () => {         //空调模式
-        if (acmode === '自动') {
+        if (acmode === '送风') {
             setAcmode('制热')
         } else if (acmode === '制热') {
             setAcmode('制冷')
         } else if (acmode === '制冷') {
-            setAcmode('自动')
+            setAcmode('除湿')
+        }else if (acmode === '除湿') {
+            setAcmode('送风')
         }
     }
 
@@ -196,12 +198,14 @@ function Monitorswiper() {
         } else if (windsp === '中') {
             setWindsp('大')
         } else if (windsp === '大') {
+            setWindsp('自动')
+        }else if (windsp === '自动') {
             setWindsp('小')
         }
     }
 
     const handminus = () => {          //减温度
-        if (actemperature > 17) {
+        if (actemperature > 18) {
             let actem = actemperature
             --actem
             setActemperature(actem)
