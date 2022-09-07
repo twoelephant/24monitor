@@ -449,7 +449,6 @@ function Monitorswiper() {
         for (let i = elength - 1; i >= 0; i--) {
             str3 = str3 + e[i]
         }
-        console.log(str3)
         return str3
     }
     const aaa = [          //监控摄像头的数组
