@@ -45,6 +45,8 @@ function Monitorswiper() {
     const [winvalue, setWinvalue] = useState('11')
     const [acmvalue, setAcmvalue] = useState('01')
     const [acsvalue, setAcsvalue] = useState('1')
+    const [lightd, setLightd] = useState([])
+    const [st, setST] = useState(10)
     let aircode
     let va1 = acsvalue
     let va2 = acmvalue
@@ -53,20 +55,24 @@ function Monitorswiper() {
 
     const apilight = [               //电灯数据
         {
+            key: '0',
+            lightstatus: '1',
+        },
+        {
             key: '1',
-            lightstatus: 'open',
+            lightstatus: '0',
         },
         {
             key: '2',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
         {
             key: '3',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
         {
             key: '4',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
     ]
 
@@ -264,7 +270,6 @@ function Monitorswiper() {
     }
 
     const handadd = () => {   //加温度
-        // clearTimeout(timetime)
         if (actemperature < 32) {
             let actem = actemperature
             ++actem
@@ -275,28 +280,49 @@ function Monitorswiper() {
             va4 = newk.padStart(4, '0')
             new4()
 
-            
+
         }
     }
 
 
     //定义一个点击改变数据事件
-    let timetime
+    let timetime = null
     const new4 = () => {
         aircode = va1 + va2 + va3 + va4
         console.log(aircode)
-        
-    }
-    const new3 =()=>{
-        clearTimeout(timetime)
-        timetime = setTimeout(() => {
-            
-            console.log(111111)
+        if (timetime) {
+            clearTimeout(timetime)
+            timetime = null
+        }
 
+        timetime = setTimeout(() => {
+            console.log(111111)
         }, 1000)
 
     }
 
+    //定义一个控制灯
+    let newlightd = '10000'
+    let timer
+    let aaaa = lightd
+    function handlight(e) {
+        if (e.lightstatus == 0) {
+            // newlightd.splice(e.key,1, 1)
+            newlightd[e.key] = 1
+            
+            // let aaaa = lightd.slice(1,3)
+            setLightd(newlightd)
+            // console.log(aaaa);
+
+            console.log(newlightd);
+
+            //  newlightd.splice(e - 1, 1, 1)
+
+            // console.log(newlightd)
+        } else {
+            // newlightd.splice(e - 1, 1, 0)
+        }
+    }
     const aaa = [          //监控摄像头的数组
         // {
         //     key: 1,
@@ -321,7 +347,9 @@ function Monitorswiper() {
     ]
 
     useEffect(() => {
+        
         showTable()
+        setLightd('10000')
     }, [])
 
     const showTable = () => {
@@ -480,11 +508,12 @@ function Monitorswiper() {
                     {apilight && apilight.map((item) => {
                         return (
                             <div className="lightac" key={item.key}
+                                onClick={() => { handlight(item) }}
                                 style={{
-                                    backgroundColor: item.lightstatus === 'close' ? '#f1f3ff' : '#3e7ff3',
-                                    color: item.lightstatus === 'close' ? '' : 'white'
+                                    backgroundColor: lightd[item.key] == 0 ? '#f1f3ff' : '#3e7ff3',
+                                    color: lightd[item.key] == 0 ? '' : 'white'
                                 }}>
-                                <IconFont type={item.lightstatus === 'close' ? 'icon-dengpao11-copy' : 'icon-de'}
+                                <IconFont type={lightd[item.key] == 0 ? 'icon-dengpao11-copy' : 'icon-de'}
                                     style={{ fontSize: '30px' }} />
                                 灯{item.key}
                             </div>
