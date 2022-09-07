@@ -13,6 +13,8 @@ import Monitors from "./monitors";
 import moment from 'moment';
 import common from "../../../utils/common";
 import QNRTC from "qnweb-rtc";
+import axios, { Axios } from "axios";
+
 
 function Monitorswiper() {
     window.Hls = Hls
@@ -43,6 +45,8 @@ function Monitorswiper() {
 
     const [temperature, setTemperature] = useState(25)     //室内温度
 
+    const [lightac, setLightac] = useState('10000')              //电灯数据
+
     const [videos, setVideos] = useState()
     const [roomToken, setRoomToken] = useState()
     const [roomName, setRoomName] = useState('001')
@@ -61,25 +65,26 @@ function Monitorswiper() {
     let timetime  //定义一个变量，用来定时使用（防抖）
 
 
-
-    let temvalue1 = useRef(0) //空调的初始温度 二进制值
-
     const apilight = [               //电灯数据
         {
+            key: '0',
+            lightstatus: '1',
+        },
+        {
             key: '1',
-            lightstatus: 'open',
+            lightstatus: '0',
         },
         {
             key: '2',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
         {
             key: '3',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
         {
             key: '4',
-            lightstatus: 'close',
+            lightstatus: '0',
         },
     ]
 
@@ -192,12 +197,12 @@ function Monitorswiper() {
 
     const handac = () => {                    //空调开关
         if (acswitch === 'open') {
-            // setAcswitch('close')   //开关
+            // setAcswitch('0')   //开关
             // setAcmode("")         //模式
             // setWindsp("")          //风量
             // setActemperature("")   //温度
 
-            acswitch1.current = 'close'   //开关
+            acswitch1.current = '0'   //开关
             acmode1.current = ''      //模式
             windsp1.current = ''    //风量
             actemperature1 = ''   //温度
@@ -210,7 +215,7 @@ function Monitorswiper() {
 
 
 
-        } else if (acswitch === 'close') {
+        } else if (acswitch === '0') {
             // setAcswitch('open')      //开关
             // setAcmode("制冷")       //模式
             // setWindsp("小")         //风量
@@ -232,7 +237,7 @@ function Monitorswiper() {
     }
 
     const handacstatus = () => {         //空调模式
-        if (acmode === '送风') {
+        if (acmode1.current === '送风') {
 
             // setAcmode('制热')
             acmode1.current = '制热'
@@ -240,7 +245,7 @@ function Monitorswiper() {
             va2 = '10'
             new4()
             new3()
-        } else if (acmode === '制热') {
+        } else if (acmode1.current === '制热') {
 
             // setAcmode('制冷')
             acmode1.current = '制冷'
@@ -248,7 +253,7 @@ function Monitorswiper() {
             va2 = '01'
             new4()
             new3()
-        } else if (acmode === '制冷') {
+        } else if (acmode1.current === '制冷') {
 
             // setAcmode('除湿')
             acmode1.current = '除湿'
@@ -256,7 +261,7 @@ function Monitorswiper() {
             va2 = '11'
             new4()
             new3()
-        } else if (acmode === '除湿') {
+        } else if (acmode1.current === '除湿') {
 
             // setAcmode('送风')
             acmode1.current = '送风'
@@ -268,14 +273,14 @@ function Monitorswiper() {
     }
 
     const handwindsp = () => {           //风速调节
-        if (windsp === '小') {
+        if (windsp1.current === '小') {
 
             // setWindsp('中')
             windsp1.current = '中'
             va3 = '10'
             new4()
             new3()
-        } else if (windsp === '中') {
+        } else if (windsp1.current === '中') {
 
             // setWindsp('大')
             windsp1.current = '大'
@@ -283,7 +288,7 @@ function Monitorswiper() {
             va3 = '01'
             new4()
             new3()
-        } else if (windsp === '大') {
+        } else if (windsp1.current === '大') {
 
             // setWindsp('自动')
             windsp1.current = '自动'
@@ -291,7 +296,7 @@ function Monitorswiper() {
             new4()
             new3()
 
-        } else if (windsp === '自动') {
+        } else if (windsp1.current === '自动') {
 
             // setWindsp('小')
             windsp1.current = '小'
@@ -350,15 +355,87 @@ function Monitorswiper() {
             setAcmode(acmode1.current)       //模式
             setWindsp(windsp1.current)         //风量
             setActemperature(actemperature1.current)  //温度
-            console.log(111111)
-
+            // console.log(111111)
         }, 1000)
-
-
-
-
+    }
+    //定义灯开关控制
+    let newstr = lightac
+    const handlight = (e) => {
+        let s = parseInt(e)
+        let str1 = newstr.substring(0, s)
+        let str2 = newstr.substring(s + 1)
+        if (newstr[s] == 0) {
+            newstr = str1 + 1 + str2
+            openlight()
+        }
+        else {
+            newstr = str1 + 0 + str2
+            closelight()
+        }
+    }
+    //开灯延时发射
+    let timer1
+    const openlight = () => {
+        clearTimeout(timer1)
+        timer1 = setTimeout(() => {
+            let str4 = changeStr(newstr)
+            let laststr = parseInt(str4, 2)
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/matt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data:{
+                    'device':'1002-4567',
+                    'cmd': 'CTL_1'+laststr+'4567'
+                }
+            }).then((res)=>{
+                if (res.code ==='SUCCESS') {
+                    alert('已开灯')
+               }
+            })
+            setLightac(newstr)
+        }, 1000)
     }
 
+    //关灯延时发射
+    let timer2
+    const closelight = () => {
+        clearTimeout(timer2)
+        timer2 = setTimeout(() => {
+            let str4 = changeStr(newstr)
+            let alltotal = 0
+            for (let i = 0; i < newstr.length; i++) {
+                alltotal = parseInt(2 ** i) + alltotal
+            }
+            let laststr = parseInt(str4, 2)
+            laststr = alltotal - laststr
+            laststr = laststr.toString().padStart(2, '0')
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data:{
+                    'device':'1002-4567',
+                    'cmd': 'CTL_2'+laststr+'4567'
+                }
+            }).then((res)=>{
+               if (res.code ==='SUCCESS') {
+                    alert('已关灯')
+               }
+            })
+            setLightac(newstr)
+        }, 1000)
+    }
+    //换位置
+    const changeStr = (e) => {
+        let str3 = ''
+        let elength = e.length
+        for (let i = elength - 1; i >= 0; i--) {
+            str3 = str3 + e[i]
+        }
+        console.log(str3)
+        return str3
+    }
     const aaa = [          //监控摄像头的数组
         // {
         //     key: 1,
@@ -547,11 +624,12 @@ function Monitorswiper() {
                     {apilight && apilight.map((item) => {
                         return (
                             <div className="lightac" key={item.key}
+                                onClick={() => { handlight(item.key) }}
                                 style={{
-                                    backgroundColor: item.lightstatus === 'close' ? '#f1f3ff' : '#3e7ff3',
-                                    color: item.lightstatus === 'close' ? '' : 'white'
+                                    backgroundColor: lightac[item.key] === '0' ? '#f1f3ff' : '#3e7ff3',
+                                    color: lightac[item.key] === '0' ? '' : 'white'
                                 }}>
-                                <IconFont type={item.lightstatus === 'close' ? 'icon-dengpao11-copy' : 'icon-de'}
+                                <IconFont type={lightac[item.key] === '0' ? 'icon-dengpao11-copy' : 'icon-de'}
                                     style={{ fontSize: '30px' }} />
                                 灯{item.key}
                             </div>
