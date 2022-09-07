@@ -14,6 +14,7 @@ import moment from 'moment';
 import common from "../../../utils/common";
 import QNRTC from "qnweb-rtc";
 import axios, { Axios } from "axios";
+import  qs from 'qs';
 
 
 function Monitorswiper() {
@@ -329,7 +330,7 @@ function Monitorswiper() {
             ++actem
             // setActemperature(actem)
             actemperature1.current = actem
-            console.log(actemperature1.current)
+            // console.log(actemperature1.current)
             let k = parseInt(actem) - 16
             let newk = k.toString(2)
             // setTemvalue(newk.padStart(4, '0'))
@@ -345,6 +346,7 @@ function Monitorswiper() {
 
     const new4 = () => {
         aircode = va1 + va2 + va3 + va4
+        aircode = parseInt(aircode, 2)
         console.log(aircode)
 
     }
@@ -356,6 +358,20 @@ function Monitorswiper() {
             setWindsp(windsp1.current)         //风量
             setActemperature(actemperature1.current)  //温度
             // console.log(111111)
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data:  qs.stringify( {
+                    'device': '1002-4567',
+                    'cmd': 'CTL_7' + aircode + '4567'
+                })
+            }).then((res) => {
+                console.log(res)
+                if (res.data.code === 'SUCCESS') {
+                    alert('空调操作成功')
+                }
+            })
         }, 1000)
     }
     //定义灯开关控制
@@ -382,16 +398,16 @@ function Monitorswiper() {
             let laststr = parseInt(str4, 2)
             axios({
                 method: 'post',
-                url: 'http://kuke.ku52.cn/api/matt/ctl',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data:{
-                    'device':'1002-4567',
-                    'cmd': 'CTL_1'+laststr+'4567'
-                }
-            }).then((res)=>{
-                if (res.code ==='SUCCESS') {
+                data: qs.stringify({
+                    'device': '1002-4567',
+                    'cmd': 'CTL_1' + laststr + '4567'
+                })
+            }).then((res) => {
+                if (res.data.code === 'SUCCESS') {
                     alert('已开灯')
-               }
+                }
             })
             setLightac(newstr)
         }, 1000)
@@ -414,14 +430,14 @@ function Monitorswiper() {
                 method: 'post',
                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data:{
-                    'device':'1002-4567',
-                    'cmd': 'CTL_2'+laststr+'4567'
-                }
-            }).then((res)=>{
-               if (res.code ==='SUCCESS') {
+                data: qs.stringify({
+                    'device': '1002-4567',
+                    'cmd': 'CTL_2' + laststr + '4567'
+                })
+            }).then((res) => {
+                if (res.data.code === 'SUCCESS') {
                     alert('已关灯')
-               }
+                }
             })
             setLightac(newstr)
         }, 1000)
