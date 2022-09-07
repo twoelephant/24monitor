@@ -28,11 +28,21 @@ function Monitorswiper() {
     const [isModalVisibremote, setIsModalVisibremote] = useState(false)
     const [voicon, setVoicon] = useState(1)
     const [monitorstatus, setMonitorstatus] = useState(1)
+
     const [acswitch, setAcswitch] = useState('open')    //空调开关
-    const [windsp, setWindsp] = useState('小')        //风速调节
+    let acswitch1 = useRef('open')
+
     const [acmode, setAcmode] = useState('制冷')        //空调模式
+    let acmode1 = useRef('制冷')  //空调模式
+
+    const [windsp, setWindsp] = useState('小')        //风量调节
+    let windsp1 = useRef('小')
+
     const [actemperature, setActemperature] = useState(22)   //空调温度
+    let actemperature1 = useRef(22)
+
     const [temperature, setTemperature] = useState(25)     //室内温度
+
     const [videos, setVideos] = useState()
     const [roomToken, setRoomToken] = useState()
     const [roomName, setRoomName] = useState('001')
@@ -41,15 +51,18 @@ function Monitorswiper() {
     const [sload, setSload] = useState(false)
     const [mclient, setMclient] = useState({})
     const [vloading, setVloading] = useState(true)
-    const [temvalue, setTemvalue] = useState('0110')
-    const [winvalue, setWinvalue] = useState('11')
-    const [acmvalue, setAcmvalue] = useState('01')
-    const [acsvalue, setAcsvalue] = useState('1')
-    let aircode
-    let va1 = acsvalue
-    let va2 = acmvalue
-    let va3 = winvalue
-    let va4 = temvalue
+
+    let aircode    //存放拼接完成的空调二进制值
+    let va1 = '1'   //空调开关的初始 二进制值
+    let va2 = '01'  //模式的初始 二进制值
+    let va3 = '11'  //风速的初始 二进制值
+    let va4 = '0110'  //空调的初始温度 二进制值
+
+    let timetime  //定义一个变量，用来定时使用（防抖）
+
+
+
+    let temvalue1 = useRef(0) //空调的初始温度 二进制值
 
     const apilight = [               //电灯数据
         {
@@ -179,121 +192,170 @@ function Monitorswiper() {
 
     const handac = () => {                    //空调开关
         if (acswitch === 'open') {
-            setAcswitch('close')
-            setWindsp("")
-            setAcmode("")
-            setActemperature("")
-            setTemperature("")
-            setAcsvalue('0')
+            // setAcswitch('close')   //开关
+            // setAcmode("")         //模式
+            // setWindsp("")          //风量
+            // setActemperature("")   //温度
+
+            acswitch1.current = 'close'   //开关
+            acmode1.current = ''      //模式
+            windsp1.current = ''    //风量
+            actemperature1 = ''   //温度
+
+            // setTemperature("") //室内温度，暂时不管
+
             va1 = '0'
             new4()
+            new3()
+
+
+
         } else if (acswitch === 'close') {
-            setAcswitch('open')
-            setAcmvalue('11')
-            setTemvalue('0110')
-            setAcsvalue('1')
-            setWinvalue('11')
-            setWindsp("小")
-            setAcmode("制冷")
-            setActemperature("22")
-            aircode = '111010110'
+            // setAcswitch('open')      //开关
+            // setAcmode("制冷")       //模式
+            // setWindsp("小")         //风量
+            // setActemperature("22") //温度
+
+            acswitch1.current = 'open'   //开关
+            acmode1.current = '制冷'   //模式
+            windsp1.current = '小'   //风量
+            actemperature1.current = '22'   //温度
+            va1 = '1'
+            va2 = '11'
+            va3 = '01'
+            va4 = '0110'
+            new4()
+            new3()
+
+            // aircode = '111010110'
         }
     }
 
     const handacstatus = () => {         //空调模式
         if (acmode === '送风') {
-            setAcmode('制热')
-            setAcmvalue('10')
+
+            // setAcmode('制热')
+            acmode1.current = '制热'
+
             va2 = '10'
             new4()
+            new3()
         } else if (acmode === '制热') {
-            setAcmode('制冷')
-            setAcmvalue('01')
+
+            // setAcmode('制冷')
+            acmode1.current = '制冷'
+
             va2 = '01'
             new4()
+            new3()
         } else if (acmode === '制冷') {
-            setAcmode('除湿')
-            setAcmvalue('11')
+
+            // setAcmode('除湿')
+            acmode1.current = '除湿'
+
             va2 = '11'
             new4()
+            new3()
         } else if (acmode === '除湿') {
-            setAcmode('送风')
-            setAcmvalue('00')
+
+            // setAcmode('送风')
+            acmode1.current = '送风'
+
             va2 = '00'
             new4()
+            new3()
         }
     }
 
     const handwindsp = () => {           //风速调节
         if (windsp === '小') {
-            setWindsp('中')
-            setWinvalue('10')
+
+            // setWindsp('中')
+            windsp1.current = '中'
             va3 = '10'
             new4()
+            new3()
         } else if (windsp === '中') {
-            setWindsp('大')
-            setWinvalue('01')
+
+            // setWindsp('大')
+            windsp1.current = '大'
+
             va3 = '01'
             new4()
+            new3()
         } else if (windsp === '大') {
-            setWindsp('自动')
-            setWinvalue('00')
+
+            // setWindsp('自动')
+            windsp1.current = '自动'
             va3 = '00'
             new4()
+            new3()
 
         } else if (windsp === '自动') {
-            setWindsp('小')
-            setWinvalue('11')
+
+            // setWindsp('小')
+            windsp1.current = '小'
             va3 = '11'
             new4()
+            new3()
 
         }
     }
 
     const handminus = () => {          //减温度
         if (actemperature > 16) {
-            let actem = actemperature
+            let actem = actemperature1.current
             --actem
-            setActemperature(actem)
+            // setActemperature(actem)
+            actemperature1.current = actem
+
             let k = parseInt(actem) - 16
             let newk = k.toString(2)
-            setTemvalue(newk.padStart(4, '0'))
             va4 = newk.padStart(4, '0')
             new4()
         }
+        new3()
     }
 
     const handadd = () => {   //加温度
-        // clearTimeout(timetime)
+
         if (actemperature < 32) {
-            let actem = actemperature
+            let actem = actemperature1.current
             ++actem
-            setActemperature(actem)
+            // setActemperature(actem)
+            actemperature1.current = actem
+            console.log(actemperature1.current)
             let k = parseInt(actem) - 16
             let newk = k.toString(2)
-            setTemvalue(newk.padStart(4, '0'))
+            // setTemvalue(newk.padStart(4, '0'))
+            // temvalue1.current=newk.padStart(4, '0')
             va4 = newk.padStart(4, '0')
             new4()
-
-            
         }
+        new3()
     }
 
 
     //定义一个点击改变数据事件
-    let timetime
+
     const new4 = () => {
         aircode = va1 + va2 + va3 + va4
         console.log(aircode)
-        
+
     }
-    const new3 =()=>{
+    const new3 = () => {
         clearTimeout(timetime)
         timetime = setTimeout(() => {
-            
+            setAcswitch(acswitch1.current)      //开关
+            setAcmode(acmode1.current)       //模式
+            setWindsp(windsp1.current)         //风量
+            setActemperature(actemperature1.current)  //温度
             console.log(111111)
 
         }, 1000)
+
+
+
 
     }
 
@@ -456,7 +518,12 @@ function Monitorswiper() {
                             <IconFont type="icon-jianhao"
                                 style={{ fontSize: '40px' }} />
                         </div>|
-                        <div className="addplus" onClick={handadd}>
+                        <div className="addplus" onClick={() => {
+                            //  handadd1()
+                            handadd()
+
+
+                        }}>
                             <IconFont type="icon-jiahao"
                                 style={{ fontSize: '40px' }} />
                         </div>
