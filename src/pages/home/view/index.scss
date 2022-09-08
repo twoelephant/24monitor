@@ -14,13 +14,10 @@
         .ant-input-affix-wrapper {
             height: 50%;
             width: 25%;
-        }
-
-        span {
             margin-left: 1%;
         }
 
-        button {
+        .ant-btn-primary {
             margin-left: 5px;
         }
 
@@ -42,7 +39,7 @@
             padding: 1% 1% 0;
             height: 33.3%;
             min-height: 210px;
-            min-width: 235px;
+            min-width: 340px;
             text-align: center;
            
             .mointor {

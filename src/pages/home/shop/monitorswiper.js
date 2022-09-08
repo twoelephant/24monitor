@@ -10,8 +10,11 @@ import "swiper/css/navigation";
 import { PoweroffOutlined } from '@ant-design/icons';
 import Monitors from "./monitors";
 import moment from 'moment';
+
 import RemoteControl from './RemoteControl';
 import MonitorVoice from "./MonitorVoice";
+
+
 
 function Monitorswiper() {
 
@@ -47,7 +50,6 @@ function Monitorswiper() {
     const handleCremote = () => {  //点击收起空调、灯泡控制面板
         setIsModalVisibremote(false)
     }
-
     useEffect(() => {
         showTable()
     }, [])
@@ -77,6 +79,7 @@ function Monitorswiper() {
             </div>
             <div className="monitorvoice" style={{ display: monitorType === 1 ? '' : 'none' }}>
                 <MonitorVoice></MonitorVoice>
+
                 <Button type="primary" danger>开门</Button>
                 <div className="remote-control"
                     onClick={handleRemote}>
