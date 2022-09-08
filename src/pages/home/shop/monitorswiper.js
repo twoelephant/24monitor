@@ -16,7 +16,6 @@ import QNRTC from "qnweb-rtc";
 import axios, { Axios } from "axios";
 import  qs from 'qs';
 
-
 function Monitorswiper() {
     window.Hls = Hls
     const IconFont = createFromIconfontCN({
@@ -485,10 +484,10 @@ function Monitorswiper() {
             setVideos(false)
         }
 
-        // common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
-        // }).then((res) => {
-        //     setRoomToken(res)
-        // })
+        common.ajax("post", "/room/token", { roomName, userId, expireAt }, {
+        }).then((res) => {
+            setRoomToken(res)
+        })
 
     }
 
@@ -523,8 +522,8 @@ function Monitorswiper() {
                         style={{ marginLeft: '40px', width: '60px' }}></Button>}
 
                 </div>
-                <div id="localtracks"></div>
-                <div id="remotetracks"></div>
+                {/* <div id="localtracks"></div>
+                <div id="remotetracks"></div> */}
                 <Button type="primary" danger>开门</Button>
                 <div className="remote-control"
                     onClick={handleremote}>
