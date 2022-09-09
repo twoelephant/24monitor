@@ -18,7 +18,9 @@ function MonitorVoice() {
     const [vloading, setVloading] = useState(true)
     const [mike, setMike] = useState(1)  //话筒状态
     const [mclient, setMclient] = useState({})
-    let talking = useRef()
+    
+    let myTracks = useRef()  
+    let otherTracks =useRef()
     const [roomToken, setRoomToken] = useState()
     const [roomName, setRoomName] = useState('001')
     const [userId, setUserId] = useState('bbb')
@@ -63,7 +65,7 @@ function MonitorVoice() {
 
         // 在这里添加
         // 获取页面上的一个元素作为播放画面的父元素
-        const localElement = talking.current
+        const localElement = myTracks.current
         // 遍历本地采集的 Track 对象
         for (const localTrack of localTracks) {
             // 如果这是麦克风采集的音频 Track，我们就不播放它。
@@ -81,7 +83,7 @@ function MonitorVoice() {
         const remoteTracks = await client.subscribe(tracks)
 
         // 选择页面上的一个元素作为父元素，播放远端的音视频轨
-        const remoteElement = document.getElementById('remotetracks')
+        const remoteElement = otherTracks.current
         // 遍历返回的远端 Track，调用 play 方法完成在页面上的播放
         for (const remoteTrack of [
             ...remoteTracks.videoTracks,
@@ -128,8 +130,8 @@ function MonitorVoice() {
             </Tooltip> : <Button loading
                 type="primary" className='mikebtn'
                 style={{ marginLeft: '40px', width: '60px' }}></Button>}
-            <div ref={talking}></div>
-            <div id="remotetracks"></div>
+            <div ref={myTracks}></div>
+            <div ref={otherTracks}></div>  
         </div>
     )
 }
