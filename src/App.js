@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router";
 import Login from "./pages/login/login";
 import Home from "./pages/home/home";
 import Monitor from "./pages/home/view/view";
-import Shop from "./pages/home/shop/shop";
+import Monitorswiper from "./pages/home/shop/monitorswiper";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Login />}></Route>
         <Route path="home/*" element={<Home />}>
           <Route index element={<Monitor />}></Route>
-          <Route path="shop" element={<Shop />}></Route>
+          <Route path="shop" element={<Monitorswiper />}></Route>
         </Route>
       </Routes>
     </HashRouter>

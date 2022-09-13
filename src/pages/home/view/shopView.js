@@ -35,7 +35,7 @@ function ShopView(props) {
         const cols = [];
         for (let i = 0; i < dataArry.length; i++) {
             cols.push(
-                <Col key={i} span={18 / 3}>
+                <Col key={i} span={6}>
                     <div className='mointor' ><div /><Monitors {...dataArry[i]} ></Monitors></div>
                     <div className='text' onClick={() => { navigate('/home/shop'); handlerClick() }}>{dataArry[i].storeName}</div>
                 </Col>,

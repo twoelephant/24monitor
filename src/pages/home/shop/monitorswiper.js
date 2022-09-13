@@ -1,5 +1,5 @@
-import React, { useEffect,useState } from "react";
-import { Button, DatePicker, Modal, TimePicker, Tooltip } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Col, DatePicker, Modal, Row, TimePicker, Tooltip } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Grid, Pagination, Navigation } from "swiper";
 import './monitorswiper.scss';
@@ -10,20 +10,21 @@ import "swiper/css/navigation";
 import { PoweroffOutlined } from '@ant-design/icons';
 import Monitors from "./monitors";
 import moment from 'moment';
-
 import RemoteControl from './RemoteControl';
 import MonitorVoice from "./MonitorVoice";
+import { useParams } from "react-router";
 
 
 
 function Monitorswiper() {
+
+    const { shopId } = useParams() //获取界面路径上带的商铺的编号
 
     const [isModalVisibremote, setIsModalVisibremote] = useState(false)
     const [monitorType, setMonitorType] = useState(1) //切换实时监控 1 和 历史监控 2
     const [acTemperature, setActemperature] = useState(22)   //空调温度  ，从后台请求数据填写到页面
     const [roomtemperature, setRoomtemperature] = useState(25)     //室内温度 
     const [camera, setCamera] = useState([])     //存储axios请求回来的 监控摄像头的数组
-    const [videos, setVideos] = useState()
 
     const onChangeDate = (date, dateString) => {    //日期选择器 
     }
@@ -41,7 +42,7 @@ function Monitorswiper() {
             setMonitorType(2)
         }
     }
-    
+
 
     const handleRemote = () => {   //点击调出空调、灯泡控制面板 
         setIsModalVisibremote(true)
@@ -54,16 +55,12 @@ function Monitorswiper() {
         showTable()
     }, [])
 
-    const showTable = () => {       //判断当前店的摄像头数量是否大于四个，大于四个会启用swiper组件
-        if (camera.length > 4) {
-            setVideos(true)
-        } else {
-            setVideos(false)
-        }
+    const showTable = () => {
+        setCamera([])
     }
 
     return (
-        <>
+        <div className="monitorswiper">
             <div className="monrow01">
                 <div className="monitortitle">
                     <span style={{ color: monitorType === 1 ? '#1890ff' : '' }}
@@ -92,7 +89,8 @@ function Monitorswiper() {
                 </div>
             </div>
             <div className="mswiper">
-                {videos ?
+                {/* 判断当前店的摄像头数量是否大于四个，大于四个会改用swiper组件 */}
+                {camera.length > 4 ?
                     <Swiper
                         navigation={true}
                         allowTouchMove={false}
@@ -116,15 +114,15 @@ function Monitorswiper() {
                             )
                         })}
                     </Swiper> :
-                    <div className='smallmon'>
+                    <Row>
                         {camera && camera.map((item) => {
                             return (
-                                <div key={item.key} className='aaplayers'>
-                                    <Monitors {...item}></Monitors>
-                                </div>
+                                <Col span={12} key={item.key}>
+                                    <Monitors></Monitors>
+                                </Col>
                             )
                         })}
-                    </div>}
+                    </Row>}
             </div>
 
             <div style={{ display: monitorType !== 1 ? '' : 'none' }}
@@ -143,7 +141,7 @@ function Monitorswiper() {
                 width={'400px'}>
                 <RemoteControl></RemoteControl>
             </Modal>
-        </>
+        </div>
     )
 }
 

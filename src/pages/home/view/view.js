@@ -34,7 +34,7 @@ function View() {
     /*在加载时要获得数据，进行动态添加*/
     useEffect(() => {
         setTotal(54)
-        
+
     }, [])
 
     return (
@@ -52,9 +52,9 @@ function View() {
             </div>
             <div className='view'>
                 {viewStatus === 1 ?
-                    <ShopView page={{page}} text={{text}}></ShopView>
+                    <ShopView page={{ page }} text={{ text }}></ShopView>
                     :
-                   <ShopTable page={{page}} pageSize={{pageSize}} text={{text}}></ShopTable>
+                    <ShopTable page={{ page }} pageSize={{ pageSize }} text={{ text }}></ShopTable>
                 }
 
                 <div className='mointor-bottom'>
