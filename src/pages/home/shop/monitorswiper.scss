@@ -120,8 +120,13 @@
             cursor: pointer;
         }
     }
+    .montimepicker {
+        font-size: 20px;
+        margin-left: 50px;
+    }
+}
 
-    .modalremote {
+ .modalremote {
         background-color: #3e7ff3;
         height: 150px;
         border-radius: 10px;
@@ -223,10 +228,4 @@
         }
     }
 
-    .montimepicker {
-        font-size: 20px;
-        margin-left: 50px;
-    }
-
-
-}
+    
