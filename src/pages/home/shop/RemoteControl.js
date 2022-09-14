@@ -11,48 +11,29 @@ export default function RemoteControl() {
         scriptUrl: '//at.alicdn.com/t/c/font_3615245_ir6mrdh0qj.js',
     });
 
-    const [acSwitch, setAcSwitch] = useState('open')    //空调开关  setAcSwitch
-    let acSwitch1 = useRef('open')
-    
+    const [acSwitch, setAcSwitch] = useState('open')    //空调开关  setAcSwitch 
     const [acModel, setAcModel] = useState('制冷')        //空调模式  setAcModel
-    let acModel1 = useRef('制冷')
-   
     const [windSpeed, setWindSpeed] = useState('小')        //风速调节  setWindSpeed
-    let windSpeed1 = useRef('小')
-    
     const [acTemperature, setActemperature] = useState(22)   //空调温度  setAcTemperature
-    let acTemperature1 = useRef(22)
-    
     const [light, setLightac] = useState('10000')              //电灯数据，用来存放灯泡开启状态，1 开启 ；0 关闭
-
     const [roomtemperature, setRoomtemperature] = useState(25)     //室内温度 
 
-
-
     let controlCode    //存放拼接完成的控制空调的二进制值
-    const [controlCode2, setControlCode2] = useState('')
-    
+    const [controlCode2, setControlCode2] = useState('')  //发送空调控制码的依赖
+
     let acSwitchCode = '1'   //空调开关的初始 二进制值
     let acModelCode = '01'  //模式的初始 二进制值
     let windSpeedCode = '11'  //风速的初始 二进制值
     let acTemperatureCode = '0110'  //空调的初始温度 二进制值 
 
-    const [newstr1, setNewstr1] = useState('')
-    const [newstr2, setNewstr2] = useState('')
-   
+    const [newstr1, setNewstr1] = useState('') //开灯发送的依赖
+    const [newstr2, setNewstr2] = useState('')  //关灯发送的依赖
 
-    let acThrottle  //定义一个变量，用来定时使用（防抖）,用于空调的控制
-    let lightThrottleOpen    //用来定时使用（防抖）,用于灯泡打开时的控制
-    let lightThrottleClose   //用来定时使用（防抖）,用于灯泡关闭时的控制
 
-    let i = 10
     useDebounce(() => {
-        console.log(111111)
 
         //发送空调控制码
         if (controlCode2 != '') {
-
-            console.log(acTemperature, acModel, acSwitch, windSpeed, controlCode2)
             axios({
                 method: 'post',
                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
@@ -62,7 +43,7 @@ export default function RemoteControl() {
                     'cmd': 'CTL_7' + controlCode2 + '4567'
                 })
             }).then((res) => {
-                console.log(res)
+                // console.log(res)
                 if (res.data.code === 'SUCCESS') {
                     alert('空调操作成功')
                     setControlCode2('')
@@ -72,7 +53,6 @@ export default function RemoteControl() {
 
         //关灯延时发送
         if (newstr2 != '') {
-            console.log(13333333,newstr2)
             axios({
                 method: 'post',
                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
@@ -90,9 +70,8 @@ export default function RemoteControl() {
         }
 
 
-         //开灯延时发送
-         if (newstr1 != '') {
-            console.log(12222,newstr1)
+        //开灯延时发送
+        if (newstr1 != '') {
             axios({
                 method: 'post',
                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
@@ -108,43 +87,7 @@ export default function RemoteControl() {
                 }
             })
         }
-    }, { wait: 1000 }, [controlCode2,newstr1,newstr2])
-
-    useDebounce(() => {
-        
-       
-    }, { wait: 1000 }, [newstr1])
-
-    useDebounce(() => {
-       
-        
-    }, { wait: 1000 }, [newstr2])
-
-    // useEffect(() => {
-    //     clearTimeout(acThrottle)
-    //     acThrottle =setTimeout(() => {
-    //         console.log(111111)
-    //         if (controlCode2!='') {    
-    //             console.log(acTemperature, acModel, acSwitch, windSpeed)
-    //             axios({
-    //                 method: 'post',
-    //                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
-    //                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    //                 data: qs.stringify({
-    //                     'device': '1002-4567',
-    //                     'cmd': 'CTL_7' + controlCode2 + '4567'
-    //                 })
-    //             }).then((res) => {
-    //                 console.log(res)
-    //                 if (res.data.code === 'SUCCESS') {
-    //                     alert('空调操作成功')
-    //                     setControlCode2('')
-    //                 }
-    //             })
-    //         }
-
-    //     },10)        
-    // },[controlCode1])
+    }, { wait: 1000 }, [controlCode2, newstr1, newstr2])
 
     const apilight = [               //电灯数据,模拟做axios请求后得到的数据
         {
@@ -197,27 +140,19 @@ export default function RemoteControl() {
 
     const handleModel = () => {         //空调模式 
         if (acModel === '送风') {
-
             setAcModel('制热')
-
             acModelCode = '10'
             spliceData()
         } else if (acModel === '制热') {
-
             setAcModel('制热')
-
             acModelCode = '01'
             spliceData()
         } else if (acModel === '制冷') {
-
             setAcModel('除湿')
-
             acModelCode = '11'
             spliceData()
         } else if (acModel === '除湿') {
-
             setAcModel('送风')
-
             acModelCode = '00'
             spliceData()
         }
@@ -225,28 +160,20 @@ export default function RemoteControl() {
 
     const handwindSpeed = () => {           //风速调节
         if (windSpeed === '小') {
-
             setWindSpeed('中')
-
             windSpeedCode = '10'
             spliceData()
         } else if (windSpeed === '中') {
-
             setWindSpeed('大')
-
             windSpeedCode = '01'
             spliceData()
         } else if (windSpeed === '大') {
-
             setWindSpeed('自动')
-
             windSpeedCode = '00'
             spliceData()
 
         } else if (windSpeed === '自动') {
-
             setWindSpeed('小')
-
             windSpeedCode = '11'
             spliceData()
         }
@@ -264,7 +191,7 @@ export default function RemoteControl() {
         }
     }
 
-    const handleAdd = () => {   //加温度 handleAdd
+    const handleAdd = () => {   //加温度
 
         if (acTemperature < 32) {
             let actem = acTemperature
@@ -282,7 +209,6 @@ export default function RemoteControl() {
         controlCode = acSwitchCode + acModelCode + windSpeedCode + acTemperatureCode
         controlCode = parseInt(controlCode, 2)
         setControlCode2(controlCode)
-
     }
 
     //定义灯开关控制  
@@ -292,7 +218,7 @@ export default function RemoteControl() {
         let str1 = newstr.substring(0, s)
         let str2 = newstr.substring(s + 1)
         if (newstr[s] == 0) {
-            newstr = str1 + 1 + str2 
+            newstr = str1 + 1 + str2
             openLight()
         }
         else {
@@ -307,13 +233,10 @@ export default function RemoteControl() {
         let str4 = changeStr(newstr)
         let laststr = parseInt(str4, 2)
         setNewstr1(laststr)
-
     }
 
     //关灯延时发射  
-
     const closeLight = () => {
-
         setLightac(newstr)
         let str4 = changeStr(newstr)
         let alltotal = 0
@@ -333,11 +256,8 @@ export default function RemoteControl() {
         for (let i = elength - 1; i >= 0; i--) {
             str3 = str3 + e[i]
         }
-        // console.log(str3)
         return str3
     }
-
-
 
     return (
         <>
