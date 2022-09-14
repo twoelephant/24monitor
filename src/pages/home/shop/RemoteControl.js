@@ -1,8 +1,9 @@
-import React,{ useRef, useState } from 'react';
-import { createFromIconfontCN} from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { createFromIconfontCN } from '@ant-design/icons';
 import { Button } from "antd";
 import axios from "axios";
 import qs from 'qs';
+import { useDebounce } from 'ahooks';
 
 export default function RemoteControl() {
 
@@ -12,29 +13,138 @@ export default function RemoteControl() {
 
     const [acSwitch, setAcSwitch] = useState('open')    //空调开关  setAcSwitch
     let acSwitch1 = useRef('open')
-
+    
     const [acModel, setAcModel] = useState('制冷')        //空调模式  setAcModel
     let acModel1 = useRef('制冷')
-
+   
     const [windSpeed, setWindSpeed] = useState('小')        //风速调节  setWindSpeed
     let windSpeed1 = useRef('小')
-
+    
     const [acTemperature, setActemperature] = useState(22)   //空调温度  setAcTemperature
     let acTemperature1 = useRef(22)
-
+    
     const [light, setLightac] = useState('10000')              //电灯数据，用来存放灯泡开启状态，1 开启 ；0 关闭
 
     const [roomtemperature, setRoomtemperature] = useState(25)     //室内温度 
 
+
+
     let controlCode    //存放拼接完成的控制空调的二进制值
+    const [controlCode2, setControlCode2] = useState('')
+    
     let acSwitchCode = '1'   //空调开关的初始 二进制值
     let acModelCode = '01'  //模式的初始 二进制值
     let windSpeedCode = '11'  //风速的初始 二进制值
     let acTemperatureCode = '0110'  //空调的初始温度 二进制值 
 
+    const [newstr1, setNewstr1] = useState('')
+    const [newstr2, setNewstr2] = useState('')
+   
+
     let acThrottle  //定义一个变量，用来定时使用（防抖）,用于空调的控制
     let lightThrottleOpen    //用来定时使用（防抖）,用于灯泡打开时的控制
     let lightThrottleClose   //用来定时使用（防抖）,用于灯泡关闭时的控制
+
+    let i = 10
+    useDebounce(() => {
+        console.log(111111)
+
+        //发送空调控制码
+        if (controlCode2 != '') {
+
+            console.log(acTemperature, acModel, acSwitch, windSpeed, controlCode2)
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: qs.stringify({
+                    'device': '1002-4567',
+                    'cmd': 'CTL_7' + controlCode2 + '4567'
+                })
+            }).then((res) => {
+                console.log(res)
+                if (res.data.code === 'SUCCESS') {
+                    alert('空调操作成功')
+                    setControlCode2('')
+                }
+            })
+        }
+
+        //关灯延时发送
+        if (newstr2 != '') {
+            console.log(13333333,newstr2)
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: qs.stringify({
+                    'device': '1002-4567',
+                    'cmd': 'CTL_2' + newstr2 + '4567'
+                })
+            }).then((res) => {
+                if (res.data.code === 'SUCCESS') {
+                    alert('已关灯')
+                    setNewstr2('')
+                }
+            })
+        }
+
+
+         //开灯延时发送
+         if (newstr1 != '') {
+            console.log(12222,newstr1)
+            axios({
+                method: 'post',
+                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: qs.stringify({
+                    'device': '1002-4567',
+                    'cmd': 'CTL_1' + newstr1 + '4567'
+                })
+            }).then((res) => {
+                if (res.data.code === 'SUCCESS') {
+                    alert('已开灯')
+                    setNewstr1('')
+                }
+            })
+        }
+    }, { wait: 1000 }, [controlCode2,newstr1,newstr2])
+
+    useDebounce(() => {
+        
+       
+    }, { wait: 1000 }, [newstr1])
+
+    useDebounce(() => {
+       
+        
+    }, { wait: 1000 }, [newstr2])
+
+    // useEffect(() => {
+    //     clearTimeout(acThrottle)
+    //     acThrottle =setTimeout(() => {
+    //         console.log(111111)
+    //         if (controlCode2!='') {    
+    //             console.log(acTemperature, acModel, acSwitch, windSpeed)
+    //             axios({
+    //                 method: 'post',
+    //                 url: 'http://kuke.ku52.cn/api/mqtt/ctl',
+    //                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    //                 data: qs.stringify({
+    //                     'device': '1002-4567',
+    //                     'cmd': 'CTL_7' + controlCode2 + '4567'
+    //                 })
+    //             }).then((res) => {
+    //                 console.log(res)
+    //                 if (res.data.code === 'SUCCESS') {
+    //                     alert('空调操作成功')
+    //                     setControlCode2('')
+    //                 }
+    //             })
+    //         }
+
+    //     },10)        
+    // },[controlCode1])
 
     const apilight = [               //电灯数据,模拟做axios请求后得到的数据
         {
@@ -62,147 +172,117 @@ export default function RemoteControl() {
     const handleAc = () => {                    //空调开关
         if (acSwitch === 'open') {
 
-            acSwitch1.current = '0'   //开关
-            acModel1.current = ''      //模式
-            windSpeed1.current = ''    //风速
-            acTemperature1 = ''   //温度
+            setAcSwitch('close')
+            setAcModel('')
+            setWindSpeed('')
+            setActemperature('')
 
             acSwitchCode = '0'
             spliceData()
-            sendCode()
 
-        } else if (acSwitch === '0') {
+        } else if (acSwitch === 'close') {
 
-            acSwitch1.current = 'open'   //开关
-            acModel1.current = '制冷'   //模式
-            windSpeed1.current = '小'   //风速
-            acTemperature1.current = '22'   //温度
+            setAcSwitch('open')
+            setAcModel('制冷')
+            setWindSpeed('小')
+            setActemperature('22')
+
             acSwitchCode = '1'
             acModelCode = '11'
             windSpeedCode = '01'
             acTemperatureCode = '0110'
             spliceData()
-            sendCode()
         }
     }
 
     const handleModel = () => {         //空调模式 
-        if (acModel1.current === '送风') {
+        if (acModel === '送风') {
 
-            acModel1.current = '制热'
+            setAcModel('制热')
 
             acModelCode = '10'
             spliceData()
-            sendCode()
-        } else if (acModel1.current === '制热') {
+        } else if (acModel === '制热') {
 
-            acModel1.current = '制冷'
+            setAcModel('制热')
 
             acModelCode = '01'
             spliceData()
-            sendCode()
-        } else if (acModel1.current === '制冷') {
+        } else if (acModel === '制冷') {
 
-            acModel1.current = '除湿'
+            setAcModel('除湿')
 
             acModelCode = '11'
             spliceData()
-            sendCode()
-        } else if (acModel1.current === '除湿') {
+        } else if (acModel === '除湿') {
 
-            acModel1.current = '送风'
+            setAcModel('送风')
 
             acModelCode = '00'
             spliceData()
-            sendCode()
         }
     }
 
     const handwindSpeed = () => {           //风速调节
-        if (windSpeed1.current === '小') {
+        if (windSpeed === '小') {
 
-            windSpeed1.current = '中'
+            setWindSpeed('中')
+
             windSpeedCode = '10'
             spliceData()
-            sendCode()
-        } else if (windSpeed1.current === '中') {
+        } else if (windSpeed === '中') {
 
-            windSpeed1.current = '大'
+            setWindSpeed('大')
 
             windSpeedCode = '01'
             spliceData()
-            sendCode()
-        } else if (windSpeed1.current === '大') {
+        } else if (windSpeed === '大') {
 
-            windSpeed1.current = '自动'
+            setWindSpeed('自动')
+
             windSpeedCode = '00'
             spliceData()
-            sendCode()
 
-        } else if (windSpeed1.current === '自动') {
+        } else if (windSpeed === '自动') {
 
-            windSpeed1.current = '小'
+            setWindSpeed('小')
+
             windSpeedCode = '11'
             spliceData()
-            sendCode()
         }
     }
 
     const handleLower = () => {          //减温度
         if (acTemperature > 16) {
-            let actem = acTemperature1.current
+            let actem = acTemperature
             --actem
-            acTemperature1.current = actem
+            setActemperature(actem)
             let k = parseInt(actem) - 16
             let newk = k.toString(2)
             acTemperatureCode = newk.padStart(4, '0')
             spliceData()
         }
-        sendCode()
     }
 
     const handleAdd = () => {   //加温度 handleAdd
 
         if (acTemperature < 32) {
-            let actem = acTemperature1.current
+            let actem = acTemperature
             ++actem
-            acTemperature1.current = actem
+            setActemperature(actem)
             let k = parseInt(actem) - 16
             let newk = k.toString(2)
             acTemperatureCode = newk.padStart(4, '0')
             spliceData()
         }
-        sendCode()
     }
 
     //拼接空调控制码，并转换为十进制
     const spliceData = () => {
         controlCode = acSwitchCode + acModelCode + windSpeedCode + acTemperatureCode
         controlCode = parseInt(controlCode, 2)
-    }
-    //发送空调控制码
-    const sendCode = () => {
-        clearTimeout(acThrottle)
-        acThrottle = setTimeout(() => {
-            setAcSwitch(acSwitch1.current)      //开关  
-            setAcModel(acModel1.current)       //模式
-            setWindSpeed(windSpeed1.current)         //风速
-            setActemperature(acTemperature1.current)  //温度
-            axios({
-                method: 'post',
-                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data: qs.stringify({
-                    'device': '1002-4567',
-                    'cmd': 'CTL_7' + controlCode + '4567'
-                })
-            }).then((res) => {
-                console.log(res)
-                if (res.data.code === 'SUCCESS') {
-                    alert('空调操作成功')
-                }
-            })
-        }, 1000)
+        setControlCode2(controlCode)
+
     }
 
     //定义灯开关控制  
@@ -212,7 +292,7 @@ export default function RemoteControl() {
         let str1 = newstr.substring(0, s)
         let str2 = newstr.substring(s + 1)
         if (newstr[s] == 0) {
-            newstr = str1 + 1 + str2
+            newstr = str1 + 1 + str2 
             openLight()
         }
         else {
@@ -223,55 +303,28 @@ export default function RemoteControl() {
 
     //开灯延时发射  
     const openLight = () => {
-        clearTimeout(lightThrottleOpen)
-        lightThrottleOpen = setTimeout(() => {
-            let str4 = changeStr(newstr)
-            let laststr = parseInt(str4, 2)
-            axios({
-                method: 'post',
-                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data: qs.stringify({
-                    'device': '1002-4567',
-                    'cmd': 'CTL_1' + laststr + '4567'
-                })
-            }).then((res) => {
-                if (res.data.code === 'SUCCESS') {
-                    alert('已开灯')
-                }
-            })
-            setLightac(newstr)
-        }, 1000)
+        setLightac(newstr)
+        let str4 = changeStr(newstr)
+        let laststr = parseInt(str4, 2)
+        setNewstr1(laststr)
+
     }
 
     //关灯延时发射  
-  
+
     const closeLight = () => {
-        clearTimeout(lightThrottleClose)
-        lightThrottleClose = setTimeout(() => {
-            let str4 = changeStr(newstr)
-            let alltotal = 0
-            for (let i = 0; i < newstr.length; i++) {
-                alltotal = parseInt(2 ** i) + alltotal
-            }
-            let laststr = parseInt(str4, 2)
-            laststr = alltotal - laststr
-            laststr = laststr.toString().padStart(2, '0')
-            axios({
-                method: 'post',
-                url: 'http://kuke.ku52.cn/api/mqtt/ctl',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data: qs.stringify({
-                    'device': '1002-4567',
-                    'cmd': 'CTL_2' + laststr + '4567'
-                })
-            }).then((res) => {
-                if (res.data.code === 'SUCCESS') {
-                    alert('已关灯')
-                }
-            })
-            setLightac(newstr)
-        }, 1000)
+
+        setLightac(newstr)
+        let str4 = changeStr(newstr)
+        let alltotal = 0
+        for (let i = 0; i < newstr.length; i++) {
+            alltotal = parseInt(2 ** i) + alltotal
+        }
+        let laststr = parseInt(str4, 2)
+        laststr = alltotal - laststr
+        laststr = laststr.toString().padStart(2, '0')
+        setNewstr2(laststr)
+
     }
     //换位置
     const changeStr = (e) => {
@@ -280,9 +333,11 @@ export default function RemoteControl() {
         for (let i = elength - 1; i >= 0; i--) {
             str3 = str3 + e[i]
         }
-        console.log(str3)
+        // console.log(str3)
         return str3
     }
+
+
 
     return (
         <>
@@ -296,6 +351,7 @@ export default function RemoteControl() {
                     </span>
                     <span>
                         室内温度：{roomtemperature}℃
+
                     </span>
                 </div>
             </div>
