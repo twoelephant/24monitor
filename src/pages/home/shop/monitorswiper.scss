@@ -1,221 +1,231 @@
-.mswiper {
-    display: flex;
-    min-height: 850px;
-    height: 85%;
-    width: 85%;
-    min-width: 1600px;
+.monitorswiper {
+    position: fixed;
+    left: 220px;
+    width: calc(100% - 220px);
+    height: 100%;
     overflow: auto;
+    background-color: white;
 
-
-    .aaplayerss {
-        min-width: 700px;
-        width: 90%;
-        aspect-ratio: 9/5;
-    }
-
-    .smallmon {
+    .mswiper {
         display: flex;
-        flex-wrap: wrap;
-    }
-
-    .swiper-slide {
-        text-align: center;
-        font-size: 18px;
-        background: #fff;
-        height: calc((100% - 30px) / 2) !important;
-
-        /* Center slide text vertically */
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
+        // min-height: 850px;
+        height: 85%;
+        width: 100%;
         justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
+        // min-width: 1600px;
+        // overflow: auto;
 
-        img {
-            width: 700px;
-            cursor: pointer;
+
+        .myswiper {
+            display: flex;
+            flex: 1;
+            width: 100px;
         }
-    }
 
-}
-
-.ant-modal-body {
-    .modalimg {
-        width: 100%;
-    }
-}
-
-.monrow01 {
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .monitortitle {
-        font-size: 25px;
-        font-weight: bold;
-
-        span {
-            margin-left: 40px;
-            cursor: pointer;
-        }
-    }
-}
-
-.monitorvoice {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 10px 20px;
-
-    .iconshengyin {
-        margin: 0 20px;
-        cursor: pointer;
-    }
-
-    .ant-select {
-        width: 200px;
-        margin: 0 0 0 10px !important;
-    }
-
-    .ant-btn {
-        margin-left: 20px;
-        height: 40px;
-    }
-
-    .mikebtn {
-        border-radius: 20px;
-    }
-
-    .remote-control {
-        background-color: black;
-        color: #41b2ff;
-        font-size: 18px;
-        margin-right: 60px;
-        border-radius: 5px;
-        padding: 5px 10px;
-        border: #41b2ff 1px solid;
-        cursor: pointer;
-    }
-}
-
-.modalremote {
-    background-color: #3e7ff3;
-    height: 150px;
-    border-radius: 10px;
-    position: relative;
-    color: white;
-
-    .displaytemperature {
-        font-size: 40px;
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%, 0);
-        margin-top: 20px;
-    }
-
-    .displaystatus {
-        position: absolute;
-        font-size: 20px;
-        left: 70%;
-        margin-top: 40px;
-    }
-
-    .displayss {
-        font-size: 20px;
-        position: absolute;
-        bottom: 5%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-    }
-}
-
-.acout {
-    display: flex;
-    align-items: center;
-    height: 60px;
-    margin-top: 10px;
-
-    .ACSW {
-        width: 140px;
-        height: 100% !important;
-        border-radius: 10px !important;
-        margin-right: 10px;
-    }
-
-    .regulate {
-        background-color: #f1f3ff;
-        border-radius: 10px;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        width: 100%;
-        justify-content: space-between;
-        font-size: 30px;
-
-        .addplus {
+        .ant-row {
             width: 100%;
-            padding-left: 40px;
-            padding-top: 10px;
+
+            .ant-col {
+                padding: 10px;
+            }
+        }
+
+
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            height: calc((100% - 30px) / 2) !important;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+
+            .aaplayerss {
+                // min-width: 700px;
+                width: 90%;
+                aspect-ratio: 9/5;
+            }
+        }
+
+    }
+
+    .ant-modal-body {
+        .modalimg {
+            width: 100%;
+        }
+    }
+
+    .monrow01 {
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .monitortitle {
+            font-size: 25px;
+            font-weight: bold;
+
+            span {
+                margin-left: 40px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .monitorvoice {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px 20px;
+
+        .iconshengyin {
+            margin: 0 20px;
+            cursor: pointer;
+        }
+
+        .ant-select {
+            width: 200px;
+            margin: 0 0 0 10px !important;
+        }
+
+        .ant-btn {
+            margin-left: 20px;
+            height: 40px;
+        }
+
+        .mikebtn {
+            border-radius: 20px;
+        }
+
+        .remote-control {
+            background-color: black;
+            color: #41b2ff;
+            font-size: 18px;
+            margin-right: 60px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            border: #41b2ff 1px solid;
             cursor: pointer;
         }
     }
-}
-
-.acmodeout {
-    display: flex;
-    margin-top: 10px;
-    margin-bottom: 50px;
-
-    .acmode {
-        width: 50%;
-        background-color: #f1f3ff;
-        border-radius: 10px;
-        height: 60px;
+    .montimepicker {
         font-size: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+        margin-left: 50px;
     }
 }
 
-.lightswitch {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-
-    .lightac {
-        font-size: 20px;
-        width: 31%;
+ .modalremote {
+        background-color: #3e7ff3;
+        height: 150px;
         border-radius: 10px;
+        position: relative;
+        color: white;
+
+        .displaytemperature {
+            font-size: 40px;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0);
+            margin-top: 20px;
+        }
+
+        .displaystatus {
+            position: absolute;
+            font-size: 20px;
+            left: 70%;
+            margin-top: 40px;
+        }
+
+        .displayss {
+            font-size: 20px;
+            position: absolute;
+            bottom: 5%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+    }
+
+    .acout {
+        display: flex;
+        align-items: center;
         height: 60px;
         margin-top: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+
+        .ACSW {
+            width: 140px;
+            height: 100% !important;
+            border-radius: 10px !important;
+            margin-right: 10px;
+        }
+
+        .regulate {
+            background-color: #f1f3ff;
+            border-radius: 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            font-size: 30px;
+
+            .addplus {
+                width: 100%;
+                padding-left: 40px;
+                padding-top: 10px;
+                cursor: pointer;
+            }
+        }
     }
-}
 
-.montimepicker {
-    font-size: 20px;
-    margin-left: 50px;
-}
+    .acmodeout {
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 50px;
 
-.aaplayers {
-    min-width: 700px;
-    width: 45%;
-    aspect-ratio: 9/5;
-    margin: 0 50px 20px 20px;
-}
+        .acmode {
+            width: 50%;
+            background-color: #f1f3ff;
+            border-radius: 10px;
+            height: 60px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    }
+
+    .lightswitch {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+
+        .lightac {
+            font-size: 20px;
+            width: 31%;
+            border-radius: 10px;
+            height: 60px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    }
+
+    
